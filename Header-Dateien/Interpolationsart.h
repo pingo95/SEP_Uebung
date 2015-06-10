@@ -16,8 +16,8 @@ class Interpolationsart {
 
 
 public:
-    virtual void berechneInterpolation(QVector<double> xIn,  QVector<double> yIn,
-                                       QVector<double> xOut, QVector<double> yOut) = 0;
+    virtual void berechneInterpolation(QVector<double>& xIn,  QVector<double>& yIn,
+                                       QVector<double>& xOut, QVector<double>& yOut) = 0;
 };
 
 #endif // INTERPOLATIONSART_H
