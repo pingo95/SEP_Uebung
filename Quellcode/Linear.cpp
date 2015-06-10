@@ -1,6 +1,11 @@
-#include "..\Header-Dateien\Linear.h"
+#include "..\Header-Dateien\linear.h"
+/* fertig->
+ *
+ * TODO: Doxygendokumentation
+ */
 
-QList<double> Linear::berechneInterpolation(int x, QList<double> y) {
-	// TODO - implement Linear::berechneInterpolation
-	throw "Not yet implemented";
+void Linear::berechneInterpolation(QVector<double> xIn,  QVector<double> yIn,
+                                                 QVector<double> &xOut, QVector<double> &yOut){
+    xOut = xIn;
+    yOut = yIn;
 }

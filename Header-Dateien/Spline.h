@@ -1,12 +1,20 @@
 #ifndef SPLINE_H
 #define SPLINE_H
 
-#include "Interpolationsart.h"
+/* Klasse für Spline-Interpolation, Header fertig
+ *
+ * TODO: Doxygendokumentation
+ *
+ */
+
+
+#include "interpolationsart.h"
 class Spline : public Interpolationsart {
 
 
 public:
-	QList<double> berechneInterpolation(int x, QList<double> y);
+    void berechneInterpolation(QVector<double>& xIn,  QVector<double>& yIn,
+                               QVector<double>& xOut, QVector<double>& yOut);
 };
 
 #endif // SPLINE_H

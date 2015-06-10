@@ -1,6 +1,6 @@
-#include "..\Header-Dateien\Polynom.h"
+#include "..\Header-Dateien\polynom.h"
 
-QList<double> Polynom::berechneInterpolation(int x, QList<double> y) {
+void Polynom::berechneInterpolation(QVector<double>& xIn,  QVector<double>& yIn,
+                                             QVector<double>& xOut, QVector<double>& yOut) {
 	// TODO - implement Polynom::berechneInterpolation
-	throw "Not yet implemented";
 }

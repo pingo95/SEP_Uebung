@@ -1,6 +1,6 @@
-#include "..\Header-Dateien\Spline.h"
+#include "..\Header-Dateien\spline.h"
 
-QList<double> Spline::berechneInterpolation(int x, QList<double> y) {
+void Spline::berechneInterpolation(QVector<double>& xIn,  QVector<double>& yIn,
+                                            QVector<double>& xOut, QVector<double>& yOut) {
 	// TODO - implement Spline::berechneInterpolation
-	throw "Not yet implemented";
 }

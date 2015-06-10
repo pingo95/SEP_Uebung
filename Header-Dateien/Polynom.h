@@ -1,12 +1,13 @@
 #ifndef POLYNOM_H
 #define POLYNOM_H
 
-#include "Interpolationsart.h"
+#include "interpolationsart.h"
 class Polynom : public Interpolationsart {
 
 
 public:
-	QList<double> berechneInterpolation(int x, QList<double> y);
+    void berechneInterpolation(QVector<double>& xIn,  QVector<double>& yIn,
+                               QVector<double>& xOut, QVector<double>& yOut);
 };
 
 #endif //POLYNOM_H

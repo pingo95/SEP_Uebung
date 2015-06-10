@@ -1,0 +1,7 @@
+<RCC>
+    <qresource prefix="/Icons">
+        <file alias="TestIcon">test.PNG</file>
+        <file alias="leftArrow">leftArrow.png</file>
+        <file alias="rightArrow">rightArrow.png</file>
+    </qresource>
+</RCC>

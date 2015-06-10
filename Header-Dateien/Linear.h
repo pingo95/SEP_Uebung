@@ -1,12 +1,14 @@
 #ifndef LINEAR_H
 #define LINEAR_H
 
-#include "Interpolationsart.h"
+#include "interpolationsart.h"
 class Linear : public Interpolationsart {
 
 
 public:
-	QList<double> berechneInterpolation(int x, QList<double> y);
+    void berechneInterpolation(QVector<double>& xIn,  QVector<double>& yIn,
+                               QVector<double>& xOut, QVector<double>& yOut);
 };
 
 #endif // LINEAR_H
+
