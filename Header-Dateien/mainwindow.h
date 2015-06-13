@@ -2,8 +2,8 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QMap>
 #include <QWidget>
-
 #include <QGridLayout>
 #include <QHBoxLayout>
 #include <QVBoxLayout>
@@ -23,15 +23,14 @@ public:
     ~MainWindow();
 
 private:
+    QMap<QString,Interpolationsart*> alleIArten;
+
     QWidget * widgetCentral;
 
     //Platz für layouts:
    QVBoxLayout * mainLayout;
    QGridLayout * subGridLayout;
    QHBoxLayout * subHBoxLayout;
-
-
-
 
     //Plot:
     Interpolationsplot * plot;
@@ -40,7 +39,7 @@ private:
     QPushButton * buttonPunktHinzufuegen;
     QPushButton * buttonAchsenAktualisieren;
     QPushButton * buttonAllePunkteLoeschen;
-   QPushButton * buttonIArtenAktivieren;
+    QPushButton * buttonIArtenAktivieren;
     QPushButton * buttonIArtenDeaktivieren;
     QPushButton * buttonAlleIArtenAktivieren;
     QPushButton * buttonAlleIArtenDeaktivieren;
@@ -71,8 +70,6 @@ private:
     QLabel * labelXKoord;
     QLabel * labelYKoord;
     QLabel * Dummy;
-
-
 
 };
 
