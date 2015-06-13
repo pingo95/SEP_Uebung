@@ -18,6 +18,7 @@ class Interpolationsart {
 public:
     virtual void berechneInterpolation(CustomQPunkteVector & in, CustomQPunkteVector & out,
                                        double xMin, double xMax, int n) = 0;
+    virtual ~Interpolationsart(){}
 };
 
 #endif // INTERPOLATIONSART_H

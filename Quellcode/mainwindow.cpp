@@ -6,6 +6,10 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), MINIMUM(-1000), MAXIMUM(1000)
 {
+    //Interpolationsarten hinzufügen
+    mapAlleIArten["Lineare Interpolation"] = new Linear();
+    mapAlleIArten["Polynom-Interpolation"] = new Polynom();
+    mapAlleIArten["kubische Spline-Interpolation"] = new Spline();
 
     //centrales Widget initialisieren
     widgetCentral = new QWidget(this);    
@@ -29,7 +33,7 @@ MainWindow::MainWindow(QWidget *parent)
     buttonAlleIArtenAktivieren = new QPushButton(widgetCentral);
     buttonAlleIArtenDeaktivieren = new QPushButton(widgetCentral);
     buttonReset = new QPushButton("Reset",widgetCentral);
-    buttonOptionen = new QPushButton("Optionen",widgetCentral);
+//    buttonOptionen = new QPushButton("Optionen",widgetCentral);
     buttonBeenden = new QPushButton("Beenden", widgetCentral);
 
     //Icons+Groesse
@@ -76,7 +80,7 @@ MainWindow::MainWindow(QWidget *parent)
     labelXMax = new QLabel("xMax",widgetCentral);
     labelWertebereich = new QLabel("Wertebereich:",widgetCentral);
     labelYMin = new QLabel("yMin",widgetCentral);
-    labelYMax = new QLabel("xMax",widgetCentral);
+    labelYMax = new QLabel("yMax",widgetCentral);
     labelPunktperTastatur = new QLabel("Punkt per Tastatur:",widgetCentral);
     labelXKoord = new QLabel("x-Koordinate",widgetCentral);
     labelYKoord = new QLabel("y-Koordinate",widgetCentral);
@@ -159,7 +163,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(buttonPunktHinzufuegen,SIGNAL(clicked(bool)),this,SLOT(neuerPunktPerTastaturSlot()));
     connect(buttonAllePunkteLoeschen,SIGNAL(clicked(bool)),plot,SLOT(allePunkteLoeschenSlot()));
     connect(buttonReset,SIGNAL(clicked(bool)),this,SLOT(resetSlot()));
-    connect(buttonOptionen,SIGNAL(clicked(bool)),this,SLOT(optionenSlot()));
+//    connect(buttonOptionen,SIGNAL(clicked(bool)),this,SLOT(optionenSlot()));
     connect(buttonBeenden,SIGNAL(clicked(bool)),this,SLOT(close()));
     connect(buttonIArtenAktivieren,SIGNAL(clicked(bool)),this,SLOT(aktiviereIArtenSlot()));
     connect(buttonIArtenDeaktivieren,SIGNAL(clicked(bool)),this,SLOT(deaktiviereIArtenSlot()));
@@ -186,11 +190,32 @@ MainWindow::MainWindow(QWidget *parent)
     spinBoxXKoord->setMaximum(100);
     spinBoxYKoord->setMinimum(0);
     spinBoxYKoord->setMaximum(50);
+
+    spinBoxXKoord->setValue(50);
+    spinBoxYKoord->setValue(25);
+
+    //Interpolationsarten initialisieren
+    listWidgetInaktiveIArten->setSelectionMode(QAbstractItemView::MultiSelection);
+    listWidgetAktiveIArten->setSelectionMode(QAbstractItemView::MultiSelection);
+
+    QList<QString> labels = mapAlleIArten.keys();
+    QList<QString>::iterator it=labels.begin();
+    for(;it!=labels.end();++it){
+//        QListWidgetItem * tmp = new QListWidgetItem(*it,listWidgetAktiveIArten);
+//        tmp->setHidden(true);
+        listWidgetInaktiveIArten->addItem(*it);
+    }
+
+    buttonIArtenDeaktivieren->setDisabled(true);
+    buttonAlleIArtenDeaktivieren->setDisabled(true);
 }
 
 MainWindow::~MainWindow()
 {
     delete widgetCentral;
+    QList<Interpolationsart*> tmp = mapAlleIArten.values();
+    QList<Interpolationsart*>::iterator it=tmp.begin();
+    for(;it!=tmp.end();++it) delete (*it);
 }
 
 void MainWindow::achsenUpdatenSlot(){
@@ -215,6 +240,10 @@ void MainWindow::achsenUpdatenSlot(){
 
 void MainWindow::neuerPunktPerTastaturSlot(){
     emit plot->plotOnClickEvent(spinBoxXKoord->value(),spinBoxYKoord->value(),Qt::LeftButton);
+    double xMin,xMax,yMin,yMax;
+    plot->getRange(xMin,xMax,yMin,yMax);
+    spinBoxXKoord->setValue(0.5*(xMax-xMin));
+    spinBoxYKoord->setValue(0.5*(yMax-yMin));
 }
 
 //void MainWindow::optionenSlot(){
@@ -222,21 +251,107 @@ void MainWindow::neuerPunktPerTastaturSlot(){
 //}
 
 void MainWindow::resetSlot(){
+    while(listWidgetAktiveIArten->count()>0){
+        QListWidgetItem * tmpItem = listWidgetAktiveIArten->takeItem(0);
+        listWidgetInaktiveIArten->addItem(tmpItem);
+    }
+    spinBoxXMin->setValue(0);
+    spinBoxXMax->setValue(100);
+    spinBoxYMin->setValue(0);
+    spinBoxYMax->setValue(50);
 
+    spinBoxXKoord->setMinimum(0);
+    spinBoxXKoord->setMaximum(100);
+    spinBoxYKoord->setMinimum(0);
+    spinBoxYKoord->setMaximum(50);
+
+    spinBoxXKoord->setValue(50);
+    spinBoxYKoord->setValue(25);
+
+    buttonIArtenAktivieren->setDisabled(false);
+    buttonAlleIArtenAktivieren->setDisabled(false);
+    buttonIArtenDeaktivieren->setDisabled(true);
+    buttonAlleIArtenDeaktivieren->setDisabled(true);
+
+    plot->reset();
 }
 
 void MainWindow::aktiviereIArtenSlot(){
+    QList<QListWidgetItem*> changedIArten = listWidgetInaktiveIArten->selectedItems();
+    if(changedIArten.size()==0) return;
+    while(changedIArten.size()>1){
+        double tmpRow = listWidgetInaktiveIArten->row(changedIArten.takeFirst());
+        QListWidgetItem * tmpItem = listWidgetInaktiveIArten->takeItem(tmpRow);
+        listWidgetAktiveIArten->addItem(tmpItem);
+        plot->addIArtOhnePlotten(mapAlleIArten[tmpItem->text()]);
+    }
+    double tmpRow = listWidgetInaktiveIArten->row(changedIArten.takeFirst());
+    QListWidgetItem * tmpItem = listWidgetInaktiveIArten->takeItem(tmpRow);
+    listWidgetAktiveIArten->addItem(tmpItem);
+    plot->addIArt(mapAlleIArten[tmpItem->text()]);
 
+
+    buttonIArtenDeaktivieren->setDisabled(false);
+    buttonAlleIArtenDeaktivieren->setDisabled(false);
+    if(listWidgetInaktiveIArten->count()==0){
+        buttonIArtenAktivieren->setDisabled(true);
+        buttonAlleIArtenAktivieren->setDisabled(true);
+    }
 }
 
 void MainWindow::deaktiviereIArtenSlot(){
+    QList<QListWidgetItem*> changedIArten = listWidgetAktiveIArten->selectedItems();
+    if(changedIArten.size()==0) return;
+    while(changedIArten.size()>1){
+        double tmpRow = listWidgetAktiveIArten->row(changedIArten.takeFirst());
+        QListWidgetItem * tmpItem = listWidgetAktiveIArten->takeItem(tmpRow);
+        listWidgetInaktiveIArten->addItem(tmpItem);
+        plot->removeIArtOhnePlotten(mapAlleIArten[tmpItem->text()]);
+    }
+    double tmpRow = listWidgetAktiveIArten->row(changedIArten.takeFirst());
+    QListWidgetItem * tmpItem = listWidgetAktiveIArten->takeItem(tmpRow);
+    listWidgetInaktiveIArten->addItem(tmpItem);
+    plot->removeIArt(mapAlleIArten[tmpItem->text()]);
 
+
+    buttonIArtenAktivieren->setDisabled(false);
+    buttonAlleIArtenAktivieren->setDisabled(false);
+    if(listWidgetAktiveIArten->count()==0){
+        buttonIArtenDeaktivieren->setDisabled(true);
+        buttonAlleIArtenDeaktivieren->setDisabled(true);
+    }
 }
 
 void MainWindow::aktiviereAlleIArtenSlot(){
+    while(listWidgetInaktiveIArten->count()>1){
+        QListWidgetItem * tmpItem = listWidgetInaktiveIArten->takeItem(0);
+        listWidgetAktiveIArten->addItem(tmpItem);
+        plot->addIArtOhnePlotten(mapAlleIArten[tmpItem->text()]);
+    }
+    QListWidgetItem * tmpItem = listWidgetInaktiveIArten->takeItem(0);
+    listWidgetAktiveIArten->addItem(tmpItem);
+    plot->addIArt(mapAlleIArten[tmpItem->text()]);
 
+    buttonIArtenAktivieren->setDisabled(true);
+    buttonAlleIArtenAktivieren->setDisabled(true);
+    buttonIArtenDeaktivieren->setDisabled(false);
+    buttonAlleIArtenDeaktivieren->setDisabled(false);
 }
 
 void MainWindow::deaktiviereAlleIArtenSlot(){
+    while(listWidgetAktiveIArten->count()>1){
+        QListWidgetItem * tmpItem = listWidgetAktiveIArten->takeItem(0);
+        listWidgetInaktiveIArten->addItem(tmpItem);
+        plot->removeIArtOhnePlotten(mapAlleIArten[tmpItem->text()]);
+    }
+    QListWidgetItem * tmpItem = listWidgetAktiveIArten->takeItem(0);
+    listWidgetInaktiveIArten->addItem(tmpItem);
+    plot->removeIArt(mapAlleIArten[tmpItem->text()]);
 
+    buttonIArtenAktivieren->setDisabled(false);
+    buttonAlleIArtenAktivieren->setDisabled(false);
+    buttonIArtenDeaktivieren->setDisabled(true);
+    buttonAlleIArtenDeaktivieren->setDisabled(true);
+
+    plot->removeAlleIArten();
 }

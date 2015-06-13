@@ -16,7 +16,8 @@ public:
     void addIArt(Interpolationsart * art);
     void addIArtOhnePlotten(Interpolationsart *art);
     void removeIArt(Interpolationsart * art);
-    void removeAlleIArt();
+    void removeIArtOhnePlotten(Interpolationsart *art);
+    void removeAlleIArten();
 protected:
 private:
     CustomQPunkteVector Punkte;

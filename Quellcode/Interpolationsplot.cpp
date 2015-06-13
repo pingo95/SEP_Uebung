@@ -11,6 +11,7 @@ Interpolationsplot::~Interpolationsplot(){
 }
 
 void Interpolationsplot::replot(){
+    for(int i=0; i<plot->graphCount(); ++i) plot->graph(i)->clearData();
     QVector<double> xIn,yIn;
     Punkte.getPointsAsSeperateVektors(xIn,yIn);
     setKeyPoints(xIn,yIn);
@@ -24,7 +25,7 @@ void Interpolationsplot::replot(){
         PunkteOut.getPointsAsSeperateVektors(xOut,yOut);
         setPoints(xOut,yOut,i,QColor((10*i)%255,(20*i)%255,(30*i)%255,255));
     }
-    //QStcePlot::replot(); called implicit by setPoints(...)
+    QStcePlot::replot();
 }
 
 void Interpolationsplot::reset(){
@@ -45,9 +46,14 @@ void Interpolationsplot::addIArtOhnePlotten(Interpolationsart *art){
 
 void Interpolationsplot::removeIArt(Interpolationsart *art){
     aktiveIArten.removeOne(art);
+    replot();
 }
 
-void Interpolationsplot::removeAlleIArt(){
+void Interpolationsplot::removeIArtOhnePlotten(Interpolationsart *art){
+    aktiveIArten.removeOne(art);
+}
+
+void Interpolationsplot::removeAlleIArten(){
     aktiveIArten.clear();
     replot();
 }

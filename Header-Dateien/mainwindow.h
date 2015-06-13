@@ -25,14 +25,14 @@ public:
 private:
     const double MINIMUM;
     const double MAXIMUM;
-    QMap<QString,Interpolationsart*> alleIArten;
+    QMap<QString,Interpolationsart*> mapAlleIArten;
 
     QWidget * widgetCentral;
 
     //Platz für layouts:
-   QVBoxLayout * mainLayout;
-   QGridLayout * subGridLayout;
-   QHBoxLayout * subHBoxLayout;
+    QVBoxLayout * mainLayout;
+    QGridLayout * subGridLayout;
+    QHBoxLayout * subHBoxLayout;
 
     //Plot:
     Interpolationsplot * plot;
