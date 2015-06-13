@@ -52,6 +52,18 @@ private:
     QListWidget * listWidgetInaktiveIArten;
 
     //Platz für Labels:
+    QLabel * labelDefinitionsbereich;
+    QLabel * labelXMin;
+    QLabel * labelXMax;
+    QLabel * labelWertebereich;
+    QLabel * labelYMin;
+    QLabel * labelYMax;
+    QLabel * labelPunktperTastatur;
+    QLabel * labelXKoord;
+    QLabel * labelYKoord;
+
+
+
 };
 
 #endif // MAINWINDOW_H
