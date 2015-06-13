@@ -16,7 +16,7 @@ MainWindow::MainWindow(QWidget *parent)
     widgetCentral->setAutoFillBackground(true);
 
 
-//    plot = new Interpolationsplot(widgetCentral);
+    plot = new Interpolationsplot(widgetCentral);
 
     buttonPunktHinzufuegen = new QPushButton("Punkt hinzufügen",widgetCentral);
     buttonAchsenAktualisieren = new QPushButton("Achsen aktualisieren",widgetCentral);
@@ -61,7 +61,7 @@ MainWindow::MainWindow(QWidget *parent)
     //Icons auf Buttons setzen
     buttonIArtenAktivieren->setLayoutDirection(Qt::RightToLeft);
     buttonIArtenAktivieren->setIcon(QIcon(":/Icons/right"));
-    buttonIArtenAktivieren->setText("Aktivieren");
+    buttonIArtenAktivieren->setText("        Aktivieren");
     buttonIArtenAktivieren->setIconSize(QSize(15,15));
 
 
@@ -72,7 +72,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     buttonAlleIArtenAktivieren->setLayoutDirection(Qt::RightToLeft);
     buttonAlleIArtenAktivieren->setIcon(QIcon(":/Icons/2right"));
-    buttonAlleIArtenAktivieren->setText("Alle aktivieren");
+    buttonAlleIArtenAktivieren->setText("   Alle aktivieren");
     buttonAlleIArtenAktivieren->setIconSize(QSize(15,15));
 
     buttonAlleIArtenDeaktivieren->setIcon(QIcon(":/Icons/2left"));
@@ -127,8 +127,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     //vierte Zeile
 
-    listWidgetInaktiveIArten->setMaximumWidth(220);
-    listWidgetAktiveIArten->setMaximumWidth(220);
+    listWidgetInaktiveIArten->setMaximumWidth(180);
+    listWidgetAktiveIArten->setMaximumWidth(180);
 
     subGridLayout->addWidget(listWidgetInaktiveIArten,3,0,4,2);
     subGridLayout->addWidget(buttonIArtenAktivieren,3,2);
@@ -142,7 +142,7 @@ MainWindow::MainWindow(QWidget *parent)
     subGridLayout->addWidget(buttonReset,6,5);
 
 
-    new QListWidgetItem(tr("test"),listWidgetAktiveIArten);
+    new QListWidgetItem(tr("kubische Spline Interpolation"),listWidgetAktiveIArten);
     new QListWidgetItem(tr("test2"),listWidgetAktiveIArten);
     new QListWidgetItem(tr("test"),listWidgetAktiveIArten);
 
