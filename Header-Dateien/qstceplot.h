@@ -77,7 +77,7 @@ public:
     */    
     void replot();
 
-private:
+protected:
     QVBoxLayout* layout;
     QCustomPlot* plot;
     QList<QCPItemEllipse> markers;

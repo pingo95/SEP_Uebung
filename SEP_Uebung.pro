@@ -13,34 +13,31 @@ TEMPLATE = app
 
 
 SOURCES +=\
-    Quellcode/main.cpp \
-    Quellcode/mainwindow.cpp \
     Quellcode/qcustomplot.cpp \
     Quellcode/qstceplot.cpp \
-    Quellcode/interpolationsplot.cpp \
+    Quellcode/punkt.cpp \
+    Quellcode/customqpunktevektor.cpp \
     Quellcode/linear.cpp \
     Quellcode/polynom.cpp \
     Quellcode/spline.cpp \
-    Quellcode/customqpunktevektor.cpp \
-    Quellcode/punkt.cpp \
-    Quellcode/customqlistwidgetitem.cpp
+    Quellcode/interpolationsplot.cpp \
+    Quellcode/mainwindow.cpp \
+    Quellcode/main.cpp
 
 HEADERS  += \
-    Header-Dateien/mainwindow.h \
     Header-Dateien/qcustomplot.h \
     Header-Dateien/qstceplot.h \
+    Header-Dateien/punkt.h \
+    Header-Dateien/customqpunktevektor.h \
     Header-Dateien/interpolationsart.h \
-    Header-Dateien/interpolationsplot.h \
     Header-Dateien/linear.h \
     Header-Dateien/polynom.h \
-    Header-Dateien/spline.h \
-    Header-Dateien/linear.h \
-    Header-Dateien/customqpunktevektor.h \
-    Header-Dateien/punkt.h \
     Header-Dateien/splineLib.h \
-    Header-Dateien/customqlistwidgetitem.h
+    Header-Dateien/spline.h \
+    Header-Dateien/interpolationsplot.h \
+    Header-Dateien/mainwindow.h
 
-win32{RC_FILE = Resources/icon.qrc}
+#win32{RC_FILE = Resources/icon.qrc}
 
 RESOURCES += \
     Resources/projectresources.qrc

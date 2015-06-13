@@ -1,5 +1,9 @@
 #include "../Header-Dateien/punkt.h"
 
+Punkt::Punkt(): x(0), y(0){
+
+}
+
 Punkt::Punkt(double x, double y): x(x), y(y){
 
 }
@@ -15,7 +19,12 @@ Punkt& Punkt::operator=(const Punkt & rhs){
     return (*this);
 }
 
-double Punkt::getX(){
+bool Punkt::operator==(const Punkt & rhs){
+    if(x==rhs.getX()&&y==rhs.getY()) return true;
+    return false;
+}
+
+double Punkt::getX() const{
     return x;
 }
 
@@ -23,7 +32,7 @@ void Punkt::setX(double x){
     this->x = x;
 }
 
-double Punkt::getY(){
+double Punkt::getY() const{
     return y;
 }
 

@@ -1,4 +1,7 @@
 #include "../Header-Dateien/mainwindow.h"
+#include "../Header-Dateien/linear.h"
+#include "../Header-Dateien/polynom.h"
+#include "../Header-Dateien/spline.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -16,7 +19,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     widgetCentral = new QWidget(this);
 
-    plot = new Interpolationsplot(widgetCentral);
+//    plot = new Interpolationsplot(widgetCentral);
 
     buttonPunktHinzufuegen = new QPushButton("Punkt hinzufügen",widgetCentral);
     buttonAchsenAktualisieren = new QPushButton("Achsen aktualisieren",widgetCentral);

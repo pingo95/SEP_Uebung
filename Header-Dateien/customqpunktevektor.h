@@ -3,9 +3,11 @@
 
 
 #include <QVector>
-class Punkt;
+#include "punkt.h"
 class CustomQPunkteVector : public QVector<Punkt>{
-
+   public:
+    void getPointsAsSeperateVektors(QVector<double> &x, QVector<double> &y);
+    void getPointsAsSortedSeperateVektors(QVector<double> &x, QVector<double> &y);
 };
 
 

@@ -2,20 +2,20 @@
 #define PUNKT
 class Punkt{
 public:
+    Punkt();
     Punkt(double x, double y);
     Punkt(const Punkt & rhs);
     Punkt& operator=(const Punkt & rhs);
+    bool operator==(const Punkt & rhs);
 
-    double getX();
+    double getX() const;
     void setX(double x);
-    double getY();
+    double getY() const;
     void setY(double y);
 
 private:
     double x;
     double y;
-
-    Punkt();
 };
 
 #endif // PUNKT

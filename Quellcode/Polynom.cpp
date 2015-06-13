@@ -1,6 +1,6 @@
 #include "..\Header-Dateien\polynom.h"
-
-void Polynom::berechneInterpolation(QVector<double>& xIn,  QVector<double>& yIn,
-                                             QVector<double>& xOut, QVector<double>& yOut) {
+#include "../Header-Dateien/customqpunktevektor.h"
+void Polynom::berechneInterpolation(CustomQPunkteVector &in,  CustomQPunkteVector &out,
+                                    double xMin, double xMax, int n) {
 	// TODO - implement Polynom::berechneInterpolation
 }

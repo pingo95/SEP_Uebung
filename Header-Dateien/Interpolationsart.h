@@ -11,13 +11,13 @@
  *
  * */
 #include <QVector>
-
+#include "customqpunktevektor.h"
 class Interpolationsart {
 
 
 public:
-    virtual void berechneInterpolation(QVector<double>& xIn,  QVector<double>& yIn,
-                                       QVector<double>& xOut, QVector<double>& yOut) = 0;
+    virtual void berechneInterpolation(CustomQPunkteVector & in, CustomQPunkteVector & out,
+                                       double xMin, double xMax, int n) = 0;
 };
 
 #endif // INTERPOLATIONSART_H

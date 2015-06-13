@@ -6,8 +6,8 @@ class Linear : public Interpolationsart {
 
 
 public:
-    void berechneInterpolation(QVector<double>& xIn,  QVector<double>& yIn,
-                               QVector<double>& xOut, QVector<double>& yOut);
+    void berechneInterpolation(CustomQPunkteVector & in, CustomQPunkteVector & out,
+                               double xMin, double xMax, int n);
 };
 
 #endif // LINEAR_H
