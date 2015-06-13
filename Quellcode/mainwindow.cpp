@@ -14,6 +14,7 @@ MainWindow::MainWindow(QWidget *parent)
 //    test2->setText("Deaktivieren");
 //    test2->setIconSize(QSize(32,32));
 
+    widgetCentral = new QWidget(this);
 
 }
 
