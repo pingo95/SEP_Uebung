@@ -4,8 +4,8 @@
  * TODO: Doxygendokumentation
  */
 
-void Linear::berechneInterpolation(QVector<double> xIn,  QVector<double> yIn,
-                                                 QVector<double> &xOut, QVector<double> &yOut){
+void Linear::berechneInterpolation(QVector<double>& xIn,  QVector<double>& yIn,
+                                   QVector<double> &xOut, QVector<double> &yOut){
     xOut = xIn;
     yOut = yIn;
 }

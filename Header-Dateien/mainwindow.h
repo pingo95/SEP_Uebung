@@ -3,22 +3,55 @@
 
 #include <QMainWindow>
 #include <QWidget>
-#include <QLabel>
-#include <QDoubleSpinBox>
-#include <QPushButton>
+
 #include <QGridLayout>
-#include <QToolButton>
+#include <QHBoxLayout>
+#include <QVBoxLayout>
+#include <QPushButton>
+#include <QDoubleSpinBox>
+#include <QListWidget>
+
 
 #include "interpolationsplot.h"
 
 class MainWindow : public QMainWindow
 {
-    Q_OBJECT
-private:
+    Q_OBJECT    
 
 public:
     MainWindow(QWidget *parent = 0);
     ~MainWindow();
+
+private:
+    QWidget * widgetCentral;
+
+    //Platz für layouts:
+
+    //Plot:
+    Interpolationsplot * plot;
+
+    //Button:
+    QPushButton * buttonPunktHinzufuegen;
+    QPushButton * buttonAchsenAktualisieren;
+    QPushButton * buttonAllePunkteLoeschen;
+    QPushButton * buttonIArtenAktivieren;
+    QPushButton * buttonIArtenDeaktivieren;
+    QPushButton * buttonReset;
+//    QPushButton * buttonOptionen;
+
+    //SpinBoxes:
+    QDoubleSpinBox * spinBoxXMin;
+    QDoubleSpinBox * spinBoxXMax;
+    QDoubleSpinBox * spinBoxYMin;
+    QDoubleSpinBox * spinBoxYMax;
+    QDoubleSpinBox * spinBoxXKoord;
+    QDoubleSpinBox * spinBoxYKoord;
+
+    //Listen:
+    QListWidget * listWidgetAktiveIArten;
+    QListWidget * listWidgetInaktiveIArten;
+
+    //Platz für Labels:
 };
 
 #endif // MAINWINDOW_H

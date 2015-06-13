@@ -20,7 +20,10 @@ SOURCES +=\
     Quellcode/interpolationsplot.cpp \
     Quellcode/linear.cpp \
     Quellcode/polynom.cpp \
-    Quellcode/spline.cpp
+    Quellcode/spline.cpp \
+    Quellcode/customqpunktevektor.cpp \
+    Quellcode/punkt.cpp \
+    Quellcode/customqlistwidgetitem.cpp
 
 HEADERS  += \
     Header-Dateien/mainwindow.h \
@@ -31,7 +34,11 @@ HEADERS  += \
     Header-Dateien/linear.h \
     Header-Dateien/polynom.h \
     Header-Dateien/spline.h \
-    Header-Dateien/linear.h
+    Header-Dateien/linear.h \
+    Header-Dateien/customqpunktevektor.h \
+    Header-Dateien/punkt.h \
+    Header-Dateien/splineLib.h \
+    Header-Dateien/customqlistwidgetitem.h
 
 win32{RC_FILE = Resources/icon.qrc}
 
