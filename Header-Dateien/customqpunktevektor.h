@@ -6,7 +6,7 @@
 class Punkt;
 class CustomQPunkteVector : public QVector<Punkt>{
 
-}
+};
 
 
 
