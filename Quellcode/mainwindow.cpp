@@ -4,9 +4,10 @@
 #include "../Header-Dateien/spline.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent)
+    : QMainWindow(parent), MINIMUM(-1000), MAXIMUM(1000)
 {
 
+    //centrales Widget initialisieren
     widgetCentral = new QWidget(this);    
 
     setWindowTitle("SEP Interpolation Gruppe 11");
@@ -15,9 +16,11 @@ MainWindow::MainWindow(QWidget *parent)
     widgetCentral->setPalette(Pal);
     widgetCentral->setAutoFillBackground(true);
 
-
+    //Plot initialisieren
     plot = new Interpolationsplot(widgetCentral);
+    plot->setMinimumSize(680,480);
 
+    //Buttons initialisieren
     buttonPunktHinzufuegen = new QPushButton("Punkt hinzufügen",widgetCentral);
     buttonAchsenAktualisieren = new QPushButton("Achsen aktualisieren",widgetCentral);
     buttonAllePunkteLoeschen = new QPushButton("Alle Punkte löschen",widgetCentral);
@@ -27,7 +30,28 @@ MainWindow::MainWindow(QWidget *parent)
     buttonAlleIArtenDeaktivieren = new QPushButton(widgetCentral);
     buttonReset = new QPushButton("Reset",widgetCentral);
     buttonOptionen = new QPushButton("Optionen",widgetCentral);
+    buttonBeenden = new QPushButton("Beenden", widgetCentral);
 
+    //Icons+Groesse
+    buttonIArtenAktivieren->setLayoutDirection(Qt::RightToLeft);
+    buttonIArtenAktivieren->setIcon(QIcon(":/Icons/right"));
+//    buttonIArtenAktivieren->setText("        Aktivieren");
+    buttonIArtenAktivieren->setIconSize(QSize(15,15));
+
+    buttonIArtenDeaktivieren->setIcon(QIcon(":/Icons/left"));
+//    buttonIArtenDeaktivieren->setText("Deaktivieren");
+    buttonIArtenDeaktivieren->setIconSize(QSize(15,15));
+
+    buttonAlleIArtenAktivieren->setLayoutDirection(Qt::RightToLeft);
+    buttonAlleIArtenAktivieren->setIcon(QIcon(":/Icons/2right"));
+//    buttonAlleIArtenAktivieren->setText("   Alle aktivieren");
+    buttonAlleIArtenAktivieren->setIconSize(QSize(15,15));
+
+    buttonAlleIArtenDeaktivieren->setIcon(QIcon(":/Icons/2left"));
+//    buttonAlleIArtenDeaktivieren->setText("Alle deaktivieren");
+    buttonAlleIArtenDeaktivieren->setIconSize(QSize(15,15));
+
+    //SpinBoxen initialisieren
     spinBoxXMin = new QDoubleSpinBox(widgetCentral);
     spinBoxXMax = new QDoubleSpinBox(widgetCentral);
     spinBoxYMin = new QDoubleSpinBox(widgetCentral);
@@ -35,9 +59,18 @@ MainWindow::MainWindow(QWidget *parent)
     spinBoxXKoord = new QDoubleSpinBox(widgetCentral);
     spinBoxYKoord = new QDoubleSpinBox(widgetCentral);
 
+    spinBoxXMax->setMaximumWidth(53);
+    spinBoxYMax->setMaximumWidth(53);
+    spinBoxYKoord->setMaximumWidth(53);
+
+    //Listen initialisieren
     listWidgetAktiveIArten = new QListWidget(widgetCentral);
     listWidgetInaktiveIArten = new QListWidget(widgetCentral);
 
+    listWidgetInaktiveIArten->setMaximumWidth(180);
+    listWidgetAktiveIArten->setMaximumWidth(180);
+
+    //Label initialisieren
     labelDefinitionsbereich = new QLabel("Definitionsbereich:",widgetCentral);
     labelXMin = new QLabel("xMin",widgetCentral);
     labelXMax = new QLabel("xMax",widgetCentral);
@@ -47,7 +80,7 @@ MainWindow::MainWindow(QWidget *parent)
     labelPunktperTastatur = new QLabel("Punkt per Tastatur:",widgetCentral);
     labelXKoord = new QLabel("x-Koordinate",widgetCentral);
     labelYKoord = new QLabel("y-Koordinate",widgetCentral);
-    Dummy = new QLabel("",widgetCentral);
+    labelDummy = new QLabel("",widgetCentral);
 
     //Ausrichtung der Labels
     labelXMin->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
@@ -57,47 +90,13 @@ MainWindow::MainWindow(QWidget *parent)
     labelXKoord->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
     labelYKoord->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
 
-
-    //Icons auf Buttons setzen
-    buttonIArtenAktivieren->setLayoutDirection(Qt::RightToLeft);
-    buttonIArtenAktivieren->setIcon(QIcon(":/Icons/right"));
-    buttonIArtenAktivieren->setText("        Aktivieren");
-    buttonIArtenAktivieren->setIconSize(QSize(15,15));
-
-
-
-    buttonIArtenDeaktivieren->setIcon(QIcon(":/Icons/left"));
-    buttonIArtenDeaktivieren->setText("Deaktivieren");
-    buttonIArtenDeaktivieren->setIconSize(QSize(15,15));
-
-    buttonAlleIArtenAktivieren->setLayoutDirection(Qt::RightToLeft);
-    buttonAlleIArtenAktivieren->setIcon(QIcon(":/Icons/2right"));
-    buttonAlleIArtenAktivieren->setText("   Alle aktivieren");
-    buttonAlleIArtenAktivieren->setIconSize(QSize(15,15));
-
-    buttonAlleIArtenDeaktivieren->setIcon(QIcon(":/Icons/2left"));
-    buttonAlleIArtenDeaktivieren->setText("Alle deaktivieren");
-    buttonAlleIArtenDeaktivieren->setIconSize(QSize(15,15));
-
-
-
-    //Layout
+    //Layouts initialisieren
     mainLayout = new QVBoxLayout(widgetCentral);
     subGridLayout = new QGridLayout(widgetCentral);
     subHBoxLayout = new QHBoxLayout(widgetCentral);
 
-    plot->setMinimumSize(680,480);
     mainLayout->addWidget(plot,6);
     mainLayout->addLayout(subGridLayout,0);
-    subGridLayout->setColumnStretch(0,0);
-    subGridLayout->setColumnStretch(1,0);
-    subGridLayout->setColumnStretch(2,0);
-    subGridLayout->setColumnStretch(3,0);
-    subGridLayout->setColumnStretch(4,0);
-    subGridLayout->setColumnStretch(5,0);
-    subGridLayout->setColumnStretch(6,0);
-    subGridLayout->setColumnStretch(7,2);
-
 
     //erste Zeile
     subGridLayout->addWidget(labelDefinitionsbereich,0,0);
@@ -105,9 +104,8 @@ MainWindow::MainWindow(QWidget *parent)
     subGridLayout->addWidget(spinBoxXMin,0,2);
     subGridLayout->addWidget(labelXMax,0,3);
     subGridLayout->addWidget(spinBoxXMax,0,4);
-    subGridLayout->addWidget(Dummy,0,7);
-
     subGridLayout->addWidget(buttonAchsenAktualisieren,0,5,2,1);
+    subGridLayout->addWidget(labelDummy,0,6);
 
 
     //zweite Zeile
@@ -126,31 +124,67 @@ MainWindow::MainWindow(QWidget *parent)
     subGridLayout->addWidget(buttonPunktHinzufuegen,2,5);
 
     //vierte Zeile
-
-    listWidgetInaktiveIArten->setMaximumWidth(180);
-    listWidgetAktiveIArten->setMaximumWidth(180);
-
     subGridLayout->addWidget(listWidgetInaktiveIArten,3,0,4,2);
     subGridLayout->addWidget(buttonIArtenAktivieren,3,2);
     subGridLayout->addWidget(buttonIArtenDeaktivieren,4,2);
     subGridLayout->addWidget(buttonAlleIArtenAktivieren,5,2);
     subGridLayout->addWidget(buttonAlleIArtenDeaktivieren,6,2);
     subGridLayout->addWidget(listWidgetAktiveIArten,3,3,4,2);
+    subGridLayout->addWidget(buttonAllePunkteLoeschen,3,5);
 
-    subGridLayout->addWidget(buttonAllePunkteLoeschen,4,5);
-    subGridLayout->addWidget(buttonOptionen,5,5);
-    subGridLayout->addWidget(buttonReset,6,5);
+    //fünfte Zeile
+    subGridLayout->addWidget(buttonOptionen,4,5);
 
+    //sechste Zeile
+    subGridLayout->addWidget(buttonReset,5,5);
 
-    new QListWidgetItem(tr("kubische Spline Interpolation"),listWidgetAktiveIArten);
-    new QListWidgetItem(tr("test2"),listWidgetAktiveIArten);
-    new QListWidgetItem(tr("test"),listWidgetAktiveIArten);
+    //siebte Zeile
+    subGridLayout->addWidget(buttonBeenden,6,5);
 
+    //Spalten-Stretch anpassen
+    subGridLayout->setColumnStretch(0,0);
+    subGridLayout->setColumnStretch(1,0);
+    subGridLayout->setColumnStretch(2,0);
+    subGridLayout->setColumnStretch(3,0);
+    subGridLayout->setColumnStretch(4,0);
+    subGridLayout->setColumnStretch(5,0);
+    subGridLayout->setColumnStretch(6,1);
+
+    //Layout anwenden
     widgetCentral->setLayout(mainLayout);
     setCentralWidget(widgetCentral);
 
+    //Buttons & Slots verbinden
+    connect(buttonAchsenAktualisieren,SIGNAL(clicked(bool)),this,SLOT(achsenUpdatenSlot()));
+    connect(buttonPunktHinzufuegen,SIGNAL(clicked(bool)),this,SLOT(neuerPunktPerTastaturSlot()));
+    connect(buttonAllePunkteLoeschen,SIGNAL(clicked(bool)),this,SLOT(allePunktLoeschenSlot()));
+    connect(buttonReset,SIGNAL(clicked(bool)),this,SLOT(resetSlot()));
+    connect(buttonBeenden,SIGNAL(clicked(bool)),this,SLOT(close()));
+    connect(buttonIArtenAktivieren,SIGNAL(clicked(bool)),this,SLOT(aktiviereIArtenSlot()));
+    connect(buttonIArtenDeaktivieren,SIGNAL(clicked(bool)),this,SLOT(deaktiviereIArtenSlot()));
+    connect(buttonAlleIArtenAktivieren,SIGNAL(clicked(bool)),this,SLOT(aktiviereAlleIArtenSlot()));
+    connect(buttonAlleIArtenDeaktivieren,SIGNAL(clicked(bool)),this,SLOT(deaktiviereAlleIArtenSlot()));
 
+    //Achseninitialisierung
+    spinBoxXMin->setValue(0);
+    spinBoxXMax->setValue(100);
+    spinBoxYMin->setValue(0);
+    spinBoxYMax->setValue(50);
 
+    spinBoxXMin->setMinimum(MINIMUM);
+    spinBoxXMin->setMaximum(MAXIMUM);
+    spinBoxXMax->setMinimum(MINIMUM);
+    spinBoxXMax->setMaximum(MAXIMUM);
+
+    spinBoxYMin->setMinimum(MINIMUM);
+    spinBoxYMin->setMaximum(MAXIMUM);
+    spinBoxYMax->setMinimum(MINIMUM);
+    spinBoxYMax->setMaximum(MAXIMUM);
+
+    spinBoxXKoord->setMinimum(0);
+    spinBoxXKoord->setMaximum(100);
+    spinBoxYKoord->setMinimum(0);
+    spinBoxYKoord->setMaximum(50);
 }
 
 MainWindow::~MainWindow()
@@ -158,3 +192,38 @@ MainWindow::~MainWindow()
     delete widgetCentral;
 }
 
+void MainWindow::achsenUpdatenSlot(){
+
+}
+
+void MainWindow::neuerPunktPerTastaturSlot(){
+
+}
+
+void MainWindow::allePunktLoeschenSlot(){
+
+}
+
+//void MainWindow::optionenSlot(){
+
+//}
+
+void MainWindow::resetSlot(){
+
+}
+
+void MainWindow::aktiviereIArtenSlot(){
+
+}
+
+void MainWindow::deaktiviereIArtenSlot(){
+
+}
+
+void MainWindow::aktiviereAlleIArtenSlot(){
+
+}
+
+void MainWindow::deaktiviereAlleIArtenSlot(){
+
+}

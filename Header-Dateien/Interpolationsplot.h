@@ -21,7 +21,6 @@ protected:
 private:
     CustomQPunkteVector Punkte;
     QList<Interpolationsart*> aktiveIArten;
-    QSize plotSize;
 
 protected slots:
     void changePunkteSlot(double x, double y, Qt::MouseButton btn);

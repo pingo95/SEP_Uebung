@@ -23,6 +23,8 @@ public:
     ~MainWindow();
 
 private:
+    const double MINIMUM;
+    const double MAXIMUM;
     QMap<QString,Interpolationsart*> alleIArten;
 
     QWidget * widgetCentral;
@@ -45,6 +47,7 @@ private:
     QPushButton * buttonAlleIArtenDeaktivieren;
     QPushButton * buttonReset;
     QPushButton * buttonOptionen;
+    QPushButton * buttonBeenden;
 
 
     //SpinBoxes:
@@ -69,8 +72,18 @@ private:
     QLabel * labelPunktperTastatur;
     QLabel * labelXKoord;
     QLabel * labelYKoord;
-    QLabel * Dummy;
+    QLabel * labelDummy;
 
+protected slots:
+    void achsenUpdatenSlot();
+    void neuerPunktPerTastaturSlot();
+    void allePunktLoeschenSlot();
+    //void optionenSlot();
+    void resetSlot();
+    void aktiviereIArtenSlot();
+    void deaktiviereIArtenSlot();
+    void aktiviereAlleIArtenSlot();
+    void deaktiviereAlleIArtenSlot();
 };
 
 #endif // MAINWINDOW_H
