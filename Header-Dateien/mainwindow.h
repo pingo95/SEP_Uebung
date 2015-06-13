@@ -26,6 +26,12 @@ private:
     QWidget * widgetCentral;
 
     //Platz für layouts:
+   QVBoxLayout * mainLayout;
+   QGridLayout * subGridLayout;
+   QHBoxLayout * subHBoxLayout;
+
+
+
 
     //Plot:
     Interpolationsplot * plot;
@@ -34,10 +40,13 @@ private:
     QPushButton * buttonPunktHinzufuegen;
     QPushButton * buttonAchsenAktualisieren;
     QPushButton * buttonAllePunkteLoeschen;
-    QPushButton * buttonIArtenAktivieren;
+   QPushButton * buttonIArtenAktivieren;
     QPushButton * buttonIArtenDeaktivieren;
+    QPushButton * buttonAlleIArtenAktivieren;
+    QPushButton * buttonAlleIArtenDeaktivieren;
     QPushButton * buttonReset;
-//    QPushButton * buttonOptionen;
+    QPushButton * buttonOptionen;
+
 
     //SpinBoxes:
     QDoubleSpinBox * spinBoxXMin;
@@ -61,6 +70,7 @@ private:
     QLabel * labelPunktperTastatur;
     QLabel * labelXKoord;
     QLabel * labelYKoord;
+    QLabel * Dummy;
 
 
 
