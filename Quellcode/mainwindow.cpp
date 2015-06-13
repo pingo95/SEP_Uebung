@@ -18,7 +18,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     //Plot initialisieren
     plot = new Interpolationsplot(widgetCentral);
-    plot->setMinimumSize(680,480);
+    plot->setMinimumSize(560,480);
 
     //Buttons initialisieren
     buttonPunktHinzufuegen = new QPushButton("Punkt hinzufügen",widgetCentral);
@@ -59,9 +59,9 @@ MainWindow::MainWindow(QWidget *parent)
     spinBoxXKoord = new QDoubleSpinBox(widgetCentral);
     spinBoxYKoord = new QDoubleSpinBox(widgetCentral);
 
-    spinBoxXMax->setMaximumWidth(53);
-    spinBoxYMax->setMaximumWidth(53);
-    spinBoxYKoord->setMaximumWidth(53);
+    spinBoxXMax->setMaximumWidth(70);
+    spinBoxYMax->setMaximumWidth(70);
+    spinBoxYKoord->setMaximumWidth(70);
 
     //Listen initialisieren
     listWidgetAktiveIArten = new QListWidget(widgetCentral);
@@ -133,7 +133,7 @@ MainWindow::MainWindow(QWidget *parent)
     subGridLayout->addWidget(buttonAllePunkteLoeschen,3,5);
 
     //fünfte Zeile
-    subGridLayout->addWidget(buttonOptionen,4,5);
+    //subGridLayout->addWidget(buttonOptionen,4,5);
 
     //sechste Zeile
     subGridLayout->addWidget(buttonReset,5,5);
@@ -157,8 +157,9 @@ MainWindow::MainWindow(QWidget *parent)
     //Buttons & Slots verbinden
     connect(buttonAchsenAktualisieren,SIGNAL(clicked(bool)),this,SLOT(achsenUpdatenSlot()));
     connect(buttonPunktHinzufuegen,SIGNAL(clicked(bool)),this,SLOT(neuerPunktPerTastaturSlot()));
-    connect(buttonAllePunkteLoeschen,SIGNAL(clicked(bool)),this,SLOT(allePunktLoeschenSlot()));
+    connect(buttonAllePunkteLoeschen,SIGNAL(clicked(bool)),plot,SLOT(allePunkteLoeschenSlot()));
     connect(buttonReset,SIGNAL(clicked(bool)),this,SLOT(resetSlot()));
+    connect(buttonOptionen,SIGNAL(clicked(bool)),this,SLOT(optionenSlot()));
     connect(buttonBeenden,SIGNAL(clicked(bool)),this,SLOT(close()));
     connect(buttonIArtenAktivieren,SIGNAL(clicked(bool)),this,SLOT(aktiviereIArtenSlot()));
     connect(buttonIArtenDeaktivieren,SIGNAL(clicked(bool)),this,SLOT(deaktiviereIArtenSlot()));
@@ -166,11 +167,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(buttonAlleIArtenDeaktivieren,SIGNAL(clicked(bool)),this,SLOT(deaktiviereAlleIArtenSlot()));
 
     //Achseninitialisierung
-    spinBoxXMin->setValue(0);
-    spinBoxXMax->setValue(100);
-    spinBoxYMin->setValue(0);
-    spinBoxYMax->setValue(50);
-
     spinBoxXMin->setMinimum(MINIMUM);
     spinBoxXMin->setMaximum(MAXIMUM);
     spinBoxXMax->setMinimum(MINIMUM);
@@ -180,6 +176,11 @@ MainWindow::MainWindow(QWidget *parent)
     spinBoxYMin->setMaximum(MAXIMUM);
     spinBoxYMax->setMinimum(MINIMUM);
     spinBoxYMax->setMaximum(MAXIMUM);
+
+    spinBoxXMin->setValue(0);
+    spinBoxXMax->setValue(100);
+    spinBoxYMin->setValue(0);
+    spinBoxYMax->setValue(50);
 
     spinBoxXKoord->setMinimum(0);
     spinBoxXKoord->setMaximum(100);
@@ -193,15 +194,27 @@ MainWindow::~MainWindow()
 }
 
 void MainWindow::achsenUpdatenSlot(){
-
+    double newXMin = spinBoxXMin->value();
+    double newXMax = spinBoxXMax->value();
+    double newYMin = spinBoxYMin->value();
+    double newYMax = spinBoxYMax->value();
+    if (newXMin >= newXMax || newYMin >= newYMax){
+        plot->getRange(newXMin,newXMax,newYMin,newYMax);
+        spinBoxXMin->setValue(newXMin);
+        spinBoxXMax->setValue(newXMax);
+        spinBoxYMin->setValue(newYMin);
+        spinBoxYMax->setValue(newYMax);
+        return;
+    }
+    plot->setRange(newXMin,newXMax,newYMin,newYMax);
+    spinBoxXKoord->setMinimum(newXMin);
+    spinBoxXKoord->setMaximum(newXMax);
+    spinBoxYKoord->setMinimum(newYMin);
+    spinBoxYKoord->setMaximum(newYMax);
 }
 
 void MainWindow::neuerPunktPerTastaturSlot(){
-
-}
-
-void MainWindow::allePunktLoeschenSlot(){
-
+    emit plot->plotOnClickEvent(spinBoxXKoord->value(),spinBoxYKoord->value(),Qt::LeftButton);
 }
 
 //void MainWindow::optionenSlot(){

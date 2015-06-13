@@ -77,7 +77,6 @@ private:
 protected slots:
     void achsenUpdatenSlot();
     void neuerPunktPerTastaturSlot();
-    void allePunktLoeschenSlot();
     //void optionenSlot();
     void resetSlot();
     void aktiviereIArtenSlot();
