@@ -12,15 +12,21 @@ Punkt::Punkt(const Punkt & rhs): x(rhs.x), y(rhs.y){
 
 }
 
-Punkt& Punkt::operator=(const Punkt & rhs){
+Punkt& Punkt::operator =(const Punkt & rhs){
     if(this==&rhs) return (*this);
     x = rhs.x;
     y = rhs.y;
     return (*this);
 }
 
-bool Punkt::operator==(const Punkt & rhs){
-    if(x==rhs.getX()&&y==rhs.getY()) return true;
+bool Punkt::operator ==(const Punkt & rhs){
+    if(x==rhs.x&&y==rhs.y) return true;
+    return false;
+}
+
+bool Punkt::operator <(const Punkt & rhs){
+    if(x < rhs.x) return true;
+    else if (x == rhs.x && y < rhs.y) return true;
     return false;
 }
 

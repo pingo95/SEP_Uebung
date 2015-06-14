@@ -15,15 +15,17 @@ void Interpolationsplot::replot(){
     QVector<double> xIn,yIn;
     Punkte.getPointsAsSeperateVektors(xIn,yIn);
     setKeyPoints(xIn,yIn);
-    if(Punkte.size()<=2) return;
-    int n = round(1. / (100*(xMax-xMin)/((double)plot->size().width())));
-    CustomQPunkteVector PunkteOut;
-    QVector<double> xOut, yOut;
-    QList<Interpolationsart*>::iterator it = aktiveIArten.begin();
-    for(int i=1; it != aktiveIArten.end(); ++it, ++i){
-        (*it)->berechneInterpolation(Punkte,PunkteOut,xMin,xMax,n);
-        PunkteOut.getPointsAsSeperateVektors(xOut,yOut);
-        setPoints(xOut,yOut,i,QColor((10*i)%255,(20*i)%255,(30*i)%255,255));
+    if(Punkte.size() > 2){
+        Punkte.sort();
+        int n = 1000 /*ceil((100*(xMax-xMin)/((double)plot->size().width())))*/;    // relative Wahl von n??
+        CustomQPunkteVector PunkteOut;
+        QVector<double> xOut, yOut;
+        QList<Interpolationsart*>::iterator it = aktiveIArten.begin();
+        for(int i=2; it != aktiveIArten.end(); ++it, ++i){
+            (*it)->berechneInterpolation(Punkte,PunkteOut,xMin,xMax,n);
+            PunkteOut.getPointsAsSeperateVektors(xOut,yOut);
+            setPoints(xOut,yOut,i,mapIArtenFarben.value(*it,Qt::black));
+        }
     }
     QStcePlot::replot();
 }
@@ -56,6 +58,10 @@ void Interpolationsplot::removeIArtOhnePlotten(Interpolationsart *art){
 void Interpolationsplot::removeAlleIArten(){
     aktiveIArten.clear();
     replot();
+}
+
+void Interpolationsplot::addColor(Interpolationsart *key, Qt::GlobalColor color){
+    mapIArtenFarben[key]=color;
 }
 
 void Interpolationsplot::changePunkteSlot(double x, double y, Qt::MouseButton btn){

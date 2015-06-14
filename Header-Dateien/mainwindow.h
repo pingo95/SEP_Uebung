@@ -26,6 +26,7 @@ private:
     const double MINIMUM;
     const double MAXIMUM;
     QMap<QString,Interpolationsart*> mapAlleIArten;
+    QMap<QString,QString> mapIArtenIcons;
 
     QWidget * widgetCentral;
 

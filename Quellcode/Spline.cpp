@@ -5,7 +5,7 @@ void Spline::berechneInterpolation(CustomQPunkteVector &in,  CustomQPunkteVector
                                    double xMin, double xMax, int n) {
     tk::spline s;
     QVector<double> x,y;
-    in.getPointsAsSortedSeperateVektors(x,y);
+    in.getPointsAsSeperateVektors(x,y);
     s.set_points(x.toStdVector(),y.toStdVector());
     double h = (xMax-xMin)/n;
     out.resize(n+1);

@@ -18,10 +18,12 @@ public:
     void removeIArt(Interpolationsart * art);
     void removeIArtOhnePlotten(Interpolationsart *art);
     void removeAlleIArten();
+    void addColor(Interpolationsart *key, Qt::GlobalColor color);
 protected:
 private:
     CustomQPunkteVector Punkte;
     QList<Interpolationsart*> aktiveIArten;
+    QMap<Interpolationsart *,Qt::GlobalColor> mapIArtenFarben;
 
 protected slots:
     void changePunkteSlot(double x, double y, Qt::MouseButton btn);

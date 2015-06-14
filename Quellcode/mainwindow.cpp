@@ -11,18 +11,29 @@ MainWindow::MainWindow(QWidget *parent)
     mapAlleIArten["Polynom-Interpolation"] = new Polynom();
     mapAlleIArten["kubische Spline-Interpolation"] = new Spline();
 
-    //centrales Widget initialisieren
-    widgetCentral = new QWidget(this);    
+    //Optional: Icons hinzufügen
+//    mapIArtenIcons["Lineare Interpolation"] = ":/Icons/Linear";
+//    mapIArtenIcons["Polynom-Interpolation"] = ":/Icons/2right";
+//    mapIArtenIcons["kubische Spline-Interpolation"] = ":/Icons/Spline";
 
+    //centrales Widget initialisieren
+    widgetCentral = new QWidget(this);
+
+    //Plot initialisieren
+    plot = new Interpolationsplot(widgetCentral);
+    plot->setMinimumSize(560,480);
+
+    //Optional: Farben hinzufügen
+    plot->addColor(mapAlleIArten["Lineare Interpolation"],Qt::red);
+    plot->addColor(mapAlleIArten["Polynom-Interpolation"],Qt::darkGreen);
+    plot->addColor(mapAlleIArten["kubische Spline-Interpolation"],Qt::darkBlue);
+
+    //Titel und Hintergrund einstellen
     setWindowTitle("SEP Interpolation Gruppe 11");
     QPalette Pal(palette());
     Pal.setColor(QPalette::Background,Qt::white);
     widgetCentral->setPalette(Pal);
     widgetCentral->setAutoFillBackground(true);
-
-    //Plot initialisieren
-    plot = new Interpolationsplot(widgetCentral);
-    plot->setMinimumSize(560,480);
 
     //Buttons initialisieren
     buttonPunktHinzufuegen = new QPushButton("Punkt hinzufügen",widgetCentral);
@@ -201,9 +212,9 @@ MainWindow::MainWindow(QWidget *parent)
     QList<QString> labels = mapAlleIArten.keys();
     QList<QString>::iterator it=labels.begin();
     for(;it!=labels.end();++it){
-//        QListWidgetItem * tmp = new QListWidgetItem(*it,listWidgetAktiveIArten);
-//        tmp->setHidden(true);
-        listWidgetInaktiveIArten->addItem(*it);
+        QListWidgetItem * tmpItem = new QListWidgetItem(*it,listWidgetInaktiveIArten);
+        QString tmpIcon = mapIArtenIcons.value(*it,"");
+        if(tmpIcon!="") tmpItem->setIcon(QIcon(tmpIcon));
     }
 
     buttonIArtenDeaktivieren->setDisabled(true);
