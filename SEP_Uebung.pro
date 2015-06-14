@@ -37,7 +37,7 @@ HEADERS  += \
     Header-Dateien/interpolationsplot.h \
     Header-Dateien/mainwindow.h
 
-#win32{RC_FILE = Resources/icon.qrc}
+win32:RC_FILE = Resources/icon.qrc
 
 RESOURCES += \
     Resources/projectresources.qrc

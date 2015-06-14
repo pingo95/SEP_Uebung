@@ -1,6 +1,5 @@
 <RCC>
     <qresource prefix="/Icons">
-        <file alias="TestIcon">test.PNG</file>
         <file alias="right">right.PNG</file>
         <file alias="2left">2left.PNG</file>
         <file alias="2right">2right.PNG</file>
