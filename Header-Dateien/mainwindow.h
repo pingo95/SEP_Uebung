@@ -74,6 +74,8 @@ private:
     QLabel * labelXKoord;
     QLabel * labelYKoord;
     QLabel * labelDummy;
+    QLabel * labelListeAktiv;
+    QLabel * labelListeInaktiv;
 
 protected slots:
     void achsenUpdatenSlot();

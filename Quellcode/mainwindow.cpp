@@ -96,6 +96,8 @@ MainWindow::MainWindow(QWidget *parent)
     labelXKoord = new QLabel("x-Koordinate",widgetCentral);
     labelYKoord = new QLabel("y-Koordinate",widgetCentral);
     labelDummy = new QLabel("",widgetCentral);
+    labelListeAktiv = new QLabel("Aktive Interpolationsarten: ",widgetCentral);
+    labelListeInaktiv = new QLabel("Inaktive Interpolationsarten: ",widgetCentral);
 
     //Ausrichtung der Labels
     labelXMin->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
@@ -139,21 +141,23 @@ MainWindow::MainWindow(QWidget *parent)
     subGridLayout->addWidget(buttonPunktHinzufuegen,2,5);
 
     //vierte Zeile
-    subGridLayout->addWidget(listWidgetInaktiveIArten,3,0,4,2);
+    subGridLayout->addWidget(labelListeInaktiv,3,0);
     subGridLayout->addWidget(buttonIArtenAktivieren,3,2);
-    subGridLayout->addWidget(buttonIArtenDeaktivieren,4,2);
-    subGridLayout->addWidget(buttonAlleIArtenAktivieren,5,2);
-    subGridLayout->addWidget(buttonAlleIArtenDeaktivieren,6,2);
-    subGridLayout->addWidget(listWidgetAktiveIArten,3,3,4,2);
+    subGridLayout->addWidget(labelListeAktiv,3,3);
     subGridLayout->addWidget(buttonAllePunkteLoeschen,3,5);
 
     //fünfte Zeile
+    subGridLayout->addWidget(listWidgetInaktiveIArten,4,0,3,2);
+    subGridLayout->addWidget(buttonIArtenDeaktivieren,4,2);
+    subGridLayout->addWidget(listWidgetAktiveIArten,4,3,3,2);
     //subGridLayout->addWidget(buttonOptionen,4,5);
 
     //sechste Zeile
+    subGridLayout->addWidget(buttonAlleIArtenAktivieren,5,2);
     subGridLayout->addWidget(buttonReset,5,5);
 
     //siebte Zeile
+    subGridLayout->addWidget(buttonAlleIArtenDeaktivieren,6,2);
     subGridLayout->addWidget(buttonBeenden,6,5);
 
     //Spalten-Stretch anpassen
@@ -350,14 +354,10 @@ void MainWindow::aktiviereAlleIArtenSlot(){
 }
 
 void MainWindow::deaktiviereAlleIArtenSlot(){
-    while(listWidgetAktiveIArten->count()>1){
+    while(listWidgetAktiveIArten->count()>0){
         QListWidgetItem * tmpItem = listWidgetAktiveIArten->takeItem(0);
         listWidgetInaktiveIArten->addItem(tmpItem);
-        plot->removeIArtOhnePlotten(mapAlleIArten[tmpItem->text()]);
     }
-    QListWidgetItem * tmpItem = listWidgetAktiveIArten->takeItem(0);
-    listWidgetInaktiveIArten->addItem(tmpItem);
-    plot->removeIArt(mapAlleIArten[tmpItem->text()]);
 
     buttonIArtenAktivieren->setDisabled(false);
     buttonAlleIArtenAktivieren->setDisabled(false);
