@@ -19,11 +19,6 @@ Punkt& Punkt::operator =(const Punkt & rhs){
     return (*this);
 }
 
-bool Punkt::operator ==(const Punkt & rhs){
-    if(x==rhs.x&&y==rhs.y) return true;
-    return false;
-}
-
 bool Punkt::operator <(const Punkt & rhs){
     if(x < rhs.x) return true;
     else if (x == rhs.x && y < rhs.y) return true;

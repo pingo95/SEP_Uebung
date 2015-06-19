@@ -4,6 +4,7 @@
 #include "qstceplot.h"
 #include <QList>
 #include "interpolationsart.h"
+#include <QMessageBox>
 
 class Interpolationsplot : public QStcePlot {
     Q_OBJECT
@@ -13,17 +14,20 @@ public:
 
     void replot();
     void reset();
-    void addIArt(Interpolationsart * art);
-    void addIArtOhnePlotten(Interpolationsart *art);
-    void removeIArt(Interpolationsart * art);
-    void removeIArtOhnePlotten(Interpolationsart *art);
+    void addIArt(QString art);
+    void addIArtOhnePlotten(QString art);
+    void removeIArt(QString art);
+    void removeIArtOhnePlotten(QString art);
     void removeAlleIArten();
-    void addColor(Interpolationsart *key, Qt::GlobalColor color);
+
 protected:
 private:
     CustomQPunkteVector Punkte;
-    QList<Interpolationsart*> aktiveIArten;
-    QMap<Interpolationsart *,Qt::GlobalColor> mapIArtenFarben;
+    QList<QString> aktiveIArten;
+    QMessageBox * msgBox;
+    int epsilon;
+
+    int findBestMatch(double x, double y);
 
 protected slots:
     void changePunkteSlot(double x, double y, Qt::MouseButton btn);

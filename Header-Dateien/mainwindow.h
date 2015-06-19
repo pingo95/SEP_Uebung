@@ -10,6 +10,8 @@
 #include <QPushButton>
 #include <QDoubleSpinBox>
 #include <QListWidget>
+#include <QErrorMessage>
+#include <QMessageBox>
 
 
 #include "interpolationsplot.h"
@@ -25,8 +27,6 @@ public:
 private:
     const double MINIMUM;
     const double MAXIMUM;
-    QMap<QString,Interpolationsart*> mapAlleIArten;
-    QMap<QString,QString> mapIArtenIcons;
 
     QWidget * widgetCentral;
 
@@ -77,15 +77,20 @@ private:
     QLabel * labelListeAktiv;
     QLabel * labelListeInaktiv;
 
+    //Fehlermeldungen & Warnungen
+    QMessageBox * msgBox;
+
 protected slots:
     void achsenUpdatenSlot();
     void neuerPunktPerTastaturSlot();
-    //void optionenSlot();
     void resetSlot();
+//    void optionenSlot();
+    void beendenSlot();
     void aktiviereIArtenSlot();
     void deaktiviereIArtenSlot();
     void aktiviereAlleIArtenSlot();
     void deaktiviereAlleIArtenSlot();
+
 };
 
 #endif // MAINWINDOW_H

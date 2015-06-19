@@ -22,7 +22,8 @@ SOURCES +=\
     Quellcode/spline.cpp \
     Quellcode/interpolationsplot.cpp \
     Quellcode/mainwindow.cpp \
-    Quellcode/main.cpp
+    Quellcode/main.cpp \
+    Quellcode/interpolationsverzeichnis.cpp
 
 HEADERS  += \
     Header-Dateien/qcustomplot.h \
@@ -35,7 +36,8 @@ HEADERS  += \
     Header-Dateien/splineLib.h \
     Header-Dateien/spline.h \
     Header-Dateien/interpolationsplot.h \
-    Header-Dateien/mainwindow.h
+    Header-Dateien/mainwindow.h \
+    Header-Dateien/interpolationsverzeichnis.h
 
 win32:RC_FILE = Resources/icon.qrc
 

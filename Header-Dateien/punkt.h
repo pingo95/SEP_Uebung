@@ -8,7 +8,6 @@ public:
     Punkt(double x, double y);
     Punkt(const Punkt & rhs);
     Punkt& operator=(const Punkt & rhs);
-    bool operator==(const Punkt & rhs);
     bool operator<(const Punkt & rhs);
 
     double getX() const;

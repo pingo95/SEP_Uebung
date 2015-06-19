@@ -2,19 +2,15 @@
 #include "../Header-Dateien/linear.h"
 #include "../Header-Dateien/polynom.h"
 #include "../Header-Dateien/spline.h"
+#include "../Header-Dateien/interpolationsverzeichnis.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), MINIMUM(-1000), MAXIMUM(1000)
+    : QMainWindow(parent), MINIMUM(-10000), MAXIMUM(10000)
 {
     //Interpolationsarten hinzufügen
-    mapAlleIArten["Lineare Interpolation"] = new Linear();
-    mapAlleIArten["Polynom-Interpolation"] = new Polynom();
-    mapAlleIArten["kubische Spline-Interpolation"] = new Spline();
-
-    //Optional: Icons hinzufügen
-//    mapIArtenIcons["Lineare Interpolation"] = ":/Icons/Linear";
-//    mapIArtenIcons["Polynom-Interpolation"] = ":/Icons/2right";
-//    mapIArtenIcons["kubische Spline-Interpolation"] = ":/Icons/Spline";
+    InterpolationsVerzeichnis::instanz()->fuegeIArtenHinzu("Lineare Interpolation",new Linear(),Qt::red);
+    InterpolationsVerzeichnis::instanz()->fuegeIArtenHinzu("Polynom-Interpolation",new Polynom(),Qt::darkGreen);
+    InterpolationsVerzeichnis::instanz()->fuegeIArtenHinzu("kubische Spline-Interpolation",new Spline(),Qt::darkBlue);
 
     //centrales Widget initialisieren
     widgetCentral = new QWidget(this);
@@ -23,17 +19,12 @@ MainWindow::MainWindow(QWidget *parent)
     plot = new Interpolationsplot(widgetCentral);
     plot->setMinimumSize(560,480);
 
-    //Optional: Farben hinzufügen
-    plot->addColor(mapAlleIArten["Lineare Interpolation"],Qt::red);
-    plot->addColor(mapAlleIArten["Polynom-Interpolation"],Qt::darkGreen);
-    plot->addColor(mapAlleIArten["kubische Spline-Interpolation"],Qt::darkBlue);
-
     //Titel und Hintergrund einstellen
     setWindowTitle("SEP Interpolation Gruppe 11");
-    QPalette Pal(palette());
-    Pal.setColor(QPalette::Background,Qt::white);
-    widgetCentral->setPalette(Pal);
-    widgetCentral->setAutoFillBackground(true);
+//    QPalette Pal(palette());
+//    Pal.setColor(QPalette::Background,Qt::white);
+//    widgetCentral->setPalette(Pal);
+//    widgetCentral->setAutoFillBackground(true);
 
     //Buttons initialisieren
     buttonPunktHinzufuegen = new QPushButton("Punkt hinzufügen",widgetCentral);
@@ -82,6 +73,8 @@ MainWindow::MainWindow(QWidget *parent)
     listWidgetAktiveIArten = new QListWidget(widgetCentral);
     listWidgetInaktiveIArten = new QListWidget(widgetCentral);
 
+    listWidgetInaktiveIArten->setMinimumWidth(180);
+    listWidgetAktiveIArten->setMinimumWidth(180);
     listWidgetInaktiveIArten->setMaximumWidth(180);
     listWidgetAktiveIArten->setMaximumWidth(180);
 
@@ -179,7 +172,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(buttonAllePunkteLoeschen,SIGNAL(clicked(bool)),plot,SLOT(allePunkteLoeschenSlot()));
     connect(buttonReset,SIGNAL(clicked(bool)),this,SLOT(resetSlot()));
 //    connect(buttonOptionen,SIGNAL(clicked(bool)),this,SLOT(optionenSlot()));
-    connect(buttonBeenden,SIGNAL(clicked(bool)),this,SLOT(close()));
+    connect(buttonBeenden,SIGNAL(clicked(bool)),this,SLOT(beendenSlot()));
     connect(buttonIArtenAktivieren,SIGNAL(clicked(bool)),this,SLOT(aktiviereIArtenSlot()));
     connect(buttonIArtenDeaktivieren,SIGNAL(clicked(bool)),this,SLOT(deaktiviereIArtenSlot()));
     connect(buttonAlleIArtenAktivieren,SIGNAL(clicked(bool)),this,SLOT(aktiviereAlleIArtenSlot()));
@@ -201,64 +194,109 @@ MainWindow::MainWindow(QWidget *parent)
     spinBoxYMin->setValue(0);
     spinBoxYMax->setValue(50);
 
-    spinBoxXKoord->setMinimum(0);
-    spinBoxXKoord->setMaximum(100);
-    spinBoxYKoord->setMinimum(0);
-    spinBoxYKoord->setMaximum(50);
+    spinBoxXKoord->setMinimum(MINIMUM);
+    spinBoxXKoord->setMaximum(MAXIMUM);
+    spinBoxYKoord->setMinimum(MINIMUM);
+    spinBoxYKoord->setMaximum(MAXIMUM);
 
-    spinBoxXKoord->setValue(50);
-    spinBoxYKoord->setValue(25);
+    spinBoxXKoord->setValue(0);
+    spinBoxYKoord->setValue(0);
 
     //Interpolationsarten initialisieren
     listWidgetInaktiveIArten->setSelectionMode(QAbstractItemView::MultiSelection);
     listWidgetAktiveIArten->setSelectionMode(QAbstractItemView::MultiSelection);
 
-    QList<QString> labels = mapAlleIArten.keys();
+    QList<QString> labels = InterpolationsVerzeichnis::instanz()->holeNamen();
     QList<QString>::iterator it=labels.begin();
     for(;it!=labels.end();++it){
-        QListWidgetItem * tmpItem = new QListWidgetItem(*it,listWidgetInaktiveIArten);
-        QString tmpIcon = mapIArtenIcons.value(*it,"");
-        if(tmpIcon!="") tmpItem->setIcon(QIcon(tmpIcon));
+        new QListWidgetItem(*it,listWidgetInaktiveIArten);
     }
 
     buttonIArtenDeaktivieren->setDisabled(true);
     buttonAlleIArtenDeaktivieren->setDisabled(true);
+
+    //Box für Fehlermeldungen & Warnungen initialisieren
+    msgBox = new QMessageBox(widgetCentral);
 }
 
 MainWindow::~MainWindow()
 {
     delete widgetCentral;
-    QList<Interpolationsart*> tmp = mapAlleIArten.values();
-    QList<Interpolationsart*>::iterator it=tmp.begin();
-    for(;it!=tmp.end();++it) delete (*it);
+    Proxy::loescheIV();
 }
 
 void MainWindow::achsenUpdatenSlot(){
-    double newXMin = spinBoxXMin->value();
-    double newXMax = spinBoxXMax->value();
-    double newYMin = spinBoxYMin->value();
-    double newYMax = spinBoxYMax->value();
-    if (newXMin >= newXMax || newYMin >= newYMax){
-        plot->getRange(newXMin,newXMax,newYMin,newYMax);
-        spinBoxXMin->setValue(newXMin);
-        spinBoxXMax->setValue(newXMax);
-        spinBoxYMin->setValue(newYMin);
-        spinBoxYMax->setValue(newYMax);
+    double xMin = spinBoxXMin->value();
+    double xMax = spinBoxXMax->value();
+    double yMin = spinBoxYMin->value();
+    double yMax = spinBoxYMax->value();
+    if (xMin >= xMax || yMin >= yMax){
+        msgBox->setWindowTitle("Ungueltige Achsenwerte");
+        msgBox->setText("Die Werte, die Sie eingegeben haben, ergeben keinen "
+                        "gültigen Definitions- bzw Wertebereich. \nMöchten Sie"
+                        " die Werte verwerfen oder überarbeiten?");
+        QString str = "Sie haben versucht [" + QString().setNum(xMin) + ", "
+                + QString().setNum(xMax) + "] als neuen Definitionsbereich und ["
+                + QString().setNum(yMin) + ", " + QString().setNum(yMax) + "] als "
+                "neuen Wertebereich zu setzen.\n=> Fehler:\n";
+        if(xMin >= xMax) str += "\txMin >= xMax\n";
+        if(yMin >= yMax) str += "\tyMin >= yMax";
+        msgBox->setDetailedText("");
+        msgBox->setDetailedText(str);
+        msgBox->setIcon(QMessageBox::Critical);
+        msgBox->setStandardButtons(QMessageBox::Retry | QMessageBox::Discard);
+        msgBox->setDefaultButton(QMessageBox::Discard);
+        int ret = msgBox->exec();
+        if(ret == QMessageBox::Retry) return;
+        plot->getRange(xMin,xMax,yMin,yMax);
+        spinBoxXMin->setValue(xMin);
+        spinBoxXMax->setValue(xMax);
+        spinBoxYMin->setValue(yMin);
+        spinBoxYMax->setValue(yMax);
         return;
     }
-    plot->setRange(newXMin,newXMax,newYMin,newYMax);
-    spinBoxXKoord->setMinimum(newXMin);
-    spinBoxXKoord->setMaximum(newXMax);
-    spinBoxYKoord->setMinimum(newYMin);
-    spinBoxYKoord->setMaximum(newYMax);
+    plot->setRange(xMin,xMax,yMin,yMax);
 }
 
 void MainWindow::neuerPunktPerTastaturSlot(){
-    emit plot->plotOnClickEvent(spinBoxXKoord->value(),spinBoxYKoord->value(),Qt::LeftButton);
+    double x = spinBoxXKoord->value();
+    double y = spinBoxYKoord->value();
     double xMin,xMax,yMin,yMax;
     plot->getRange(xMin,xMax,yMin,yMax);
-    spinBoxXKoord->setValue(0.5*(xMax-xMin));
-    spinBoxYKoord->setValue(0.5*(yMax-yMin));
+    if(x < xMin || x > xMax || y < yMin || y > yMax){
+        msgBox->setWindowTitle("Punkt nicht im Plot");
+        msgBox->setText("Der Punkt, den Sie hinzufügen möchten, liegt "
+                        "außerhalb des sichtbaren Koordinatensystems. \n"
+                        "Möchten Sie ihn trotzdem hinzufügen, verwerfen"
+                        " oder die Koordinaten überarbeiten?");
+        QString str= "Sie haben versucht einen Punkt an den folgenden "
+                     "Koordinaten hinzuzufügen (" + QString().setNum(x)
+                     + ", " + QString().setNum(y) + "). \nDer aktuelle "
+                     "Definitionsbereich ist [" + QString().setNum(xMin)
+                     + ", " + QString().setNum(xMax) + "]. \nDer aktuelle "
+                     "Wertebereich ist [" + QString().setNum(yMin)
+                     + ", " + QString().setNum(yMax) + "].\n=> Warnung:\n";
+        if(x < xMin) str += "\tx < xMin\n";
+        if(x > xMax) str += "\tx > xMax\n";
+        if(y < yMin) str += "\ty < yMin\n";
+        if(y > yMax) str += "\ty > yMax";
+        msgBox->setDetailedText("");
+        msgBox->setDetailedText(str);
+        msgBox->setIcon(QMessageBox::Warning);
+        msgBox->setStandardButtons(QMessageBox::Apply | QMessageBox::Retry | QMessageBox::Discard);
+        msgBox->setDefaultButton(QMessageBox::Discard);
+        int ret = msgBox->exec();
+        if(ret == QMessageBox::Retry) return;
+        spinBoxXKoord->setValue(0);
+        spinBoxYKoord->setValue(0);
+        if(ret == QMessageBox::Discard) return;
+        emit plot->plotOnClickEvent(x,y,Qt::LeftButton);
+    }
+    else {
+        spinBoxXKoord->setValue(0);
+        spinBoxYKoord->setValue(0);
+        emit plot->plotOnClickEvent(x,y,Qt::LeftButton);
+    }
 }
 
 //void MainWindow::optionenSlot(){
@@ -275,13 +313,8 @@ void MainWindow::resetSlot(){
     spinBoxYMin->setValue(0);
     spinBoxYMax->setValue(50);
 
-    spinBoxXKoord->setMinimum(0);
-    spinBoxXKoord->setMaximum(100);
-    spinBoxYKoord->setMinimum(0);
-    spinBoxYKoord->setMaximum(50);
-
-    spinBoxXKoord->setValue(50);
-    spinBoxYKoord->setValue(25);
+    spinBoxXKoord->setValue(0);
+    spinBoxYKoord->setValue(0);
 
     buttonIArtenAktivieren->setDisabled(false);
     buttonAlleIArtenAktivieren->setDisabled(false);
@@ -291,6 +324,17 @@ void MainWindow::resetSlot(){
     plot->reset();
 }
 
+void MainWindow::beendenSlot(){
+    msgBox->setWindowTitle("Programm beenden");
+    msgBox->setText("Sind Sie sicher, dass Sie das Programm beenden möchten?");
+    msgBox->setDetailedText("");
+    msgBox->setIcon(QMessageBox::Question);
+    msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
+    msgBox->setDefaultButton(QMessageBox::Yes);
+    int ret = msgBox->exec();
+    if (ret == QMessageBox::Yes) this->close();
+}
+
 void MainWindow::aktiviereIArtenSlot(){
     QList<QListWidgetItem*> changedIArten = listWidgetInaktiveIArten->selectedItems();
     if(changedIArten.size()==0) return;
@@ -298,12 +342,12 @@ void MainWindow::aktiviereIArtenSlot(){
         double tmpRow = listWidgetInaktiveIArten->row(changedIArten.takeFirst());
         QListWidgetItem * tmpItem = listWidgetInaktiveIArten->takeItem(tmpRow);
         listWidgetAktiveIArten->addItem(tmpItem);
-        plot->addIArtOhnePlotten(mapAlleIArten[tmpItem->text()]);
+        plot->addIArtOhnePlotten(tmpItem->text());
     }
     double tmpRow = listWidgetInaktiveIArten->row(changedIArten.takeFirst());
     QListWidgetItem * tmpItem = listWidgetInaktiveIArten->takeItem(tmpRow);
     listWidgetAktiveIArten->addItem(tmpItem);
-    plot->addIArt(mapAlleIArten[tmpItem->text()]);
+    plot->addIArt(tmpItem->text());
 
 
     buttonIArtenDeaktivieren->setDisabled(false);
@@ -321,12 +365,12 @@ void MainWindow::deaktiviereIArtenSlot(){
         double tmpRow = listWidgetAktiveIArten->row(changedIArten.takeFirst());
         QListWidgetItem * tmpItem = listWidgetAktiveIArten->takeItem(tmpRow);
         listWidgetInaktiveIArten->addItem(tmpItem);
-        plot->removeIArtOhnePlotten(mapAlleIArten[tmpItem->text()]);
+        plot->removeIArtOhnePlotten(tmpItem->text());
     }
     double tmpRow = listWidgetAktiveIArten->row(changedIArten.takeFirst());
     QListWidgetItem * tmpItem = listWidgetAktiveIArten->takeItem(tmpRow);
     listWidgetInaktiveIArten->addItem(tmpItem);
-    plot->removeIArt(mapAlleIArten[tmpItem->text()]);
+    plot->removeIArt(tmpItem->text());
 
 
     buttonIArtenAktivieren->setDisabled(false);
@@ -341,11 +385,11 @@ void MainWindow::aktiviereAlleIArtenSlot(){
     while(listWidgetInaktiveIArten->count()>1){
         QListWidgetItem * tmpItem = listWidgetInaktiveIArten->takeItem(0);
         listWidgetAktiveIArten->addItem(tmpItem);
-        plot->addIArtOhnePlotten(mapAlleIArten[tmpItem->text()]);
+        plot->addIArtOhnePlotten(tmpItem->text());
     }
     QListWidgetItem * tmpItem = listWidgetInaktiveIArten->takeItem(0);
     listWidgetAktiveIArten->addItem(tmpItem);
-    plot->addIArt(mapAlleIArten[tmpItem->text()]);
+    plot->addIArt(tmpItem->text());
 
     buttonIArtenAktivieren->setDisabled(true);
     buttonAlleIArtenAktivieren->setDisabled(true);

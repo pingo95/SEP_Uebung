@@ -1,6 +1,8 @@
 #include "../Header-Dateien/customqpunktevektor.h"
 
 void CustomQPunkteVector::getPointsAsSeperateVektors(QVector<double> &x, QVector<double> &y){
+    x.clear();
+    y.clear();
     for(int i=0; i<this->size(); ++i){
         x.append(this->at(i).getX());
         y.append(this->at(i).getY());
@@ -18,22 +20,9 @@ void CustomQPunkteVector::sort(){
     }
 }
 
-//void CustomQPunkteVector::getPointsAsSortedSeperateVektors(QVector<double> &x, QVector<double> &y){
-//    CustomQPunkteVector tmpVektor=*this;
-//    int n = tmpVektor.size();
-//    x.resize(n);
-//    y.resize(n);
-//    for(int k=0; k<n; ++k){
-//        double min=tmpVektor[0].getX();
-//        int min_id=0;
-//        for(int i=0; i<tmpVektor.size(); ++i){
-//            if(tmpVektor[i].getX()<min){
-//                min = tmpVektor[i].getX();
-//                min_id = i;
-//            }
-//        }
-//        Punkt tmpPunkt = tmpVektor.takeAt(min_id);
-//        x[k] = tmpPunkt.getX();
-//        y[k] = tmpPunkt.getY();
-//    }
-//}
+int CustomQPunkteVector::findEqualX(double x){
+    for(int i=0; i < size(); ++i){
+        if((*this)[i].getX() == x) return i;
+    }
+    return -1;
+}
