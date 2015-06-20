@@ -9,7 +9,7 @@ void CustomQPunkteVector::getPointsAsSeperateVektors(QVector<double> &x, QVector
     }
 }
 
-void CustomQPunkteVector::sort(){
+void CustomQPunkteVector::sortieren(){
     int j;
     for(int i=1; i < size(); ++i){
         Punkt tmp = (*this)[i];
@@ -20,7 +20,7 @@ void CustomQPunkteVector::sort(){
     }
 }
 
-int CustomQPunkteVector::findEqualX(double x){
+int CustomQPunkteVector::findeGleichesX(double x){
     for(int i=0; i < size(); ++i){
         if((*this)[i].getX() == x) return i;
     }

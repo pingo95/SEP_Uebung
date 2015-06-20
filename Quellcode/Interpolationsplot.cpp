@@ -18,8 +18,7 @@ void Interpolationsplot::replot(){
     Punkte.getPointsAsSeperateVektors(xIn,yIn);
     setKeyPoints(xIn,yIn);
     if(Punkte.size() > 2){
-//        Punkte.sort();
-        int n =1000 /*ceil(xMax-xMin/(((100*(xMax-xMin)/((double)plot->size().width())))))*/;    // relative Wahl von n??
+        int n =1000;
         CustomQPunkteVector PunkteOut;
         QVector<double> xOut, yOut;
         QList<QString>::iterator it = aktiveIArten.begin();
@@ -83,7 +82,7 @@ int Interpolationsplot::findBestMatch(double x, double y){
 
 void Interpolationsplot::changePunkteSlot(double x, double y, Qt::MouseButton btn){
     if(btn==Qt::LeftButton){
-        int pos = Punkte.findEqualX(x);
+        int pos = Punkte.findeGleichesX(x);
         if(pos != -1){
             msgBox->setWindowTitle("Punkt existiert schon");
             msgBox->setText("An der x-Position, an der Sie einen Punkt hinzufügen wollen,"
@@ -98,14 +97,18 @@ void Interpolationsplot::changePunkteSlot(double x, double y, Qt::MouseButton bt
             msgBox->setDetailedText("");
             msgBox->setDetailedText(str);
             msgBox->setIcon(QMessageBox::Warning);
-            msgBox->setStandardButtons(QMessageBox::Apply | QMessageBox::Discard);
+            msgBox->setStandardButtons(QMessageBox::Discard);
+            QPushButton * tmpButton = new QPushButton("Überschreiben");
+            msgBox->addButton(tmpButton,QMessageBox::ApplyRole);
             msgBox->setDefaultButton(QMessageBox::Discard);
             int ret = msgBox->exec();
+            msgBox->removeButton(tmpButton);
+            delete tmpButton;
             if(ret == QMessageBox::Discard) return;
             Punkte[pos].setY(y);
         }
         else Punkte.append(Punkt(x,y));
-        Punkte.sort();
+        Punkte.sortieren();
     }else{
         do{
             int posBestMatch = findBestMatch(x,y);

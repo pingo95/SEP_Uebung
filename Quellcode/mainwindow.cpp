@@ -35,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent)
     buttonAlleIArtenAktivieren = new QPushButton(widgetCentral);
     buttonAlleIArtenDeaktivieren = new QPushButton(widgetCentral);
     buttonReset = new QPushButton("Reset",widgetCentral);
-//    buttonOptionen = new QPushButton("Optionen",widgetCentral);
+    buttonHilfe = new QPushButton("Hilfe",widgetCentral);
     buttonBeenden = new QPushButton("Beenden", widgetCentral);
 
     //Icons+Groesse
@@ -88,9 +88,8 @@ MainWindow::MainWindow(QWidget *parent)
     labelPunktperTastatur = new QLabel("Punkt per Tastatur:",widgetCentral);
     labelXKoord = new QLabel("x-Koordinate",widgetCentral);
     labelYKoord = new QLabel("y-Koordinate",widgetCentral);
-    labelDummy = new QLabel("",widgetCentral);
-    labelListeAktiv = new QLabel("Aktive Interpolationsarten: ",widgetCentral);
-    labelListeInaktiv = new QLabel("Inaktive Interpolationsarten: ",widgetCentral);
+    labelListeAktiv = new QLabel("Aktive Interpolationsarten:",widgetCentral);
+    labelListeInaktiv = new QLabel("Inaktive Interpolationsarten:",widgetCentral);
 
     //Ausrichtung der Labels
     labelXMin->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
@@ -99,6 +98,12 @@ MainWindow::MainWindow(QWidget *parent)
     labelYMax->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
     labelXKoord->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
     labelYKoord->setAlignment(Qt::AlignVCenter | Qt::AlignRight);
+
+    //Platzhalter initialisieren
+    spacerItem = new QSpacerItem(0,0,QSizePolicy::Ignored,QSizePolicy::MinimumExpanding);
+
+    //Box für Fehlermeldungen & Warnungen initialisieren
+    msgBox = new QMessageBox(widgetCentral);
 
     //Layouts initialisieren
     mainLayout = new QVBoxLayout(widgetCentral);
@@ -115,8 +120,7 @@ MainWindow::MainWindow(QWidget *parent)
     subGridLayout->addWidget(labelXMax,0,3);
     subGridLayout->addWidget(spinBoxXMax,0,4);
     subGridLayout->addWidget(buttonAchsenAktualisieren,0,5,2,1);
-    subGridLayout->addWidget(labelDummy,0,6);
-
+    subGridLayout->addItem(spacerItem,0,6);
 
     //zweite Zeile
     subGridLayout->addWidget(labelWertebereich,1,0);
@@ -134,24 +138,26 @@ MainWindow::MainWindow(QWidget *parent)
     subGridLayout->addWidget(buttonPunktHinzufuegen,2,5);
 
     //vierte Zeile
-    subGridLayout->addWidget(labelListeInaktiv,3,0);
-    subGridLayout->addWidget(buttonIArtenAktivieren,3,2);
-    subGridLayout->addWidget(labelListeAktiv,3,3);
-    subGridLayout->addWidget(buttonAllePunkteLoeschen,3,5);
+    subGridLayout->addWidget(labelListeInaktiv,3,0,1,2);
+    subGridLayout->addWidget(labelListeAktiv,3,3,1,2);
 
     //fünfte Zeile
-    subGridLayout->addWidget(listWidgetInaktiveIArten,4,0,3,2);
-    subGridLayout->addWidget(buttonIArtenDeaktivieren,4,2);
-    subGridLayout->addWidget(listWidgetAktiveIArten,4,3,3,2);
-    //subGridLayout->addWidget(buttonOptionen,4,5);
+    subGridLayout->addWidget(listWidgetInaktiveIArten,4,0,4,2);
+    subGridLayout->addWidget(buttonIArtenAktivieren,4,2);
+    subGridLayout->addWidget(listWidgetAktiveIArten,4,3,4,2);
+    subGridLayout->addWidget(buttonAllePunkteLoeschen,4,5);
 
     //sechste Zeile
-    subGridLayout->addWidget(buttonAlleIArtenAktivieren,5,2);
+    subGridLayout->addWidget(buttonIArtenDeaktivieren,5,2);
     subGridLayout->addWidget(buttonReset,5,5);
 
     //siebte Zeile
-    subGridLayout->addWidget(buttonAlleIArtenDeaktivieren,6,2);
-    subGridLayout->addWidget(buttonBeenden,6,5);
+    subGridLayout->addWidget(buttonAlleIArtenAktivieren,6,2);
+    subGridLayout->addWidget(buttonHilfe,6,5);
+
+    //achte Zeile
+    subGridLayout->addWidget(buttonAlleIArtenDeaktivieren,7,2);
+    subGridLayout->addWidget(buttonBeenden,7,5);
 
     //Spalten-Stretch anpassen
     subGridLayout->setColumnStretch(0,0);
@@ -171,7 +177,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(buttonPunktHinzufuegen,SIGNAL(clicked(bool)),this,SLOT(neuerPunktPerTastaturSlot()));
     connect(buttonAllePunkteLoeschen,SIGNAL(clicked(bool)),plot,SLOT(allePunkteLoeschenSlot()));
     connect(buttonReset,SIGNAL(clicked(bool)),this,SLOT(resetSlot()));
-//    connect(buttonOptionen,SIGNAL(clicked(bool)),this,SLOT(optionenSlot()));
+    connect(buttonHilfe,SIGNAL(clicked(bool)),this,SLOT(hilfeSlot()));
     connect(buttonBeenden,SIGNAL(clicked(bool)),this,SLOT(beendenSlot()));
     connect(buttonIArtenAktivieren,SIGNAL(clicked(bool)),this,SLOT(aktiviereIArtenSlot()));
     connect(buttonIArtenDeaktivieren,SIGNAL(clicked(bool)),this,SLOT(deaktiviereIArtenSlot()));
@@ -214,14 +220,12 @@ MainWindow::MainWindow(QWidget *parent)
 
     buttonIArtenDeaktivieren->setDisabled(true);
     buttonAlleIArtenDeaktivieren->setDisabled(true);
-
-    //Box für Fehlermeldungen & Warnungen initialisieren
-    msgBox = new QMessageBox(widgetCentral);
 }
 
 MainWindow::~MainWindow()
 {
     delete widgetCentral;
+    if(spacerItem != NULL) delete spacerItem;
     Proxy::loescheIV();
 }
 
@@ -244,10 +248,14 @@ void MainWindow::achsenUpdatenSlot(){
         msgBox->setDetailedText("");
         msgBox->setDetailedText(str);
         msgBox->setIcon(QMessageBox::Critical);
-        msgBox->setStandardButtons(QMessageBox::Retry | QMessageBox::Discard);
+        msgBox->setStandardButtons(QMessageBox::Discard);
+        QPushButton * tmpButton = new QPushButton("Überarbeiten");
+        msgBox->addButton(tmpButton,QMessageBox::AcceptRole);
         msgBox->setDefaultButton(QMessageBox::Discard);
         int ret = msgBox->exec();
-        if(ret == QMessageBox::Retry) return;
+        msgBox->removeButton(tmpButton);
+        delete tmpButton;
+        if(ret == QMessageBox::AcceptRole) return;
         plot->getRange(xMin,xMax,yMin,yMax);
         spinBoxXMin->setValue(xMin);
         spinBoxXMax->setValue(xMax);
@@ -283,10 +291,18 @@ void MainWindow::neuerPunktPerTastaturSlot(){
         msgBox->setDetailedText("");
         msgBox->setDetailedText(str);
         msgBox->setIcon(QMessageBox::Warning);
-        msgBox->setStandardButtons(QMessageBox::Apply | QMessageBox::Retry | QMessageBox::Discard);
+        msgBox->setStandardButtons(QMessageBox::Discard);
+        QPushButton * tmpButton = new QPushButton("Hinzufügen");
+        QPushButton * tmpButton2 = new QPushButton("Überarbeiten");
+        msgBox->addButton(tmpButton,QMessageBox::ApplyRole);
+        msgBox->addButton(tmpButton2,QMessageBox::AcceptRole);
         msgBox->setDefaultButton(QMessageBox::Discard);
         int ret = msgBox->exec();
-        if(ret == QMessageBox::Retry) return;
+        msgBox->removeButton(tmpButton);
+        msgBox->removeButton(tmpButton2);
+        delete tmpButton;
+        delete tmpButton2;
+        if(ret == QMessageBox::AcceptRole) return;
         spinBoxXKoord->setValue(0);
         spinBoxYKoord->setValue(0);
         if(ret == QMessageBox::Discard) return;
@@ -298,10 +314,6 @@ void MainWindow::neuerPunktPerTastaturSlot(){
         emit plot->plotOnClickEvent(x,y,Qt::LeftButton);
     }
 }
-
-//void MainWindow::optionenSlot(){
-
-//}
 
 void MainWindow::resetSlot(){
     while(listWidgetAktiveIArten->count()>0){
@@ -324,6 +336,37 @@ void MainWindow::resetSlot(){
     plot->reset();
 }
 
+void MainWindow::hilfeSlot(){
+    msgBox->setWindowTitle("Hilfe");
+    msgBox->setText("Diese Programm bietet folgende Funktionalitäten:\n\n"
+                    "1. Einen Punkt hinzufügen:\nUm einen Punkt hinzu"
+                    "zufügen, klicken Sie entweder mit der linken Maustaste "
+                    "an die gewünschte Stelle im Koordinatensystem oder geben "
+                    "Sie die Koordinaten über die Felder 'x-Koordinate' und '"
+                    "y-Koordinate' ein und bestätigen Sie mit 'Punkt hinzufügen'.\n"
+                    "\n2. Einen Punkt löschen:\nUm einen Punkt zu löschen, "
+                    "klicken Sie auf den zu löschenden Punkt im Koordinaten"
+                    "system.\n\n3. Definitions- und Wertebereich ändern:\nUm den "
+                    "Definitions- oder Wertebereich zu ändern, ändern Sie den "
+                    "gewünschten Wert in den Feldern 'xMin', 'xMax', 'yMin' oder "
+                    "'yMax' und bestätigen Sie mit 'Achsen aktualisieren'.\n\n4. "
+                    "Interpolationsarten zu (de-)aktivieren:\nUm Interpolationsarten"
+                    "zu (de-)aktivieren, markieren Sie die gewünschten Arten per Maus"
+                    "klick in der entsprechenden Liste und drücken Sie den einfachen "
+                    "Pfeil, der in Richtung der anderen Liste zeigt. Um alle Interpol"
+                    "ationsarten zu (de-)aktivieren, drücken Sie den entsprechenden "
+                    "Doppelpfeil.\n\n5. Alle Punkte löschen:\nUm alle Punkte zu "
+                    "löschen, drücken Sie 'Alle Punkte löschen'.\n\n6. Das Programm "
+                    "zurücksetzen:\nUm das Programm zurückzusetzen, drücken Sie 'Reset"
+                    "'.\n\n7. Das Programm beenden:\nUm das Programm zu beenden, "
+                    "drücken Sie 'Beenden' und bestätigen Sie mit der 'Enter'-Taste.");
+    msgBox->setDetailedText("");
+    msgBox->setIcon(QMessageBox::Information);
+    msgBox->setStandardButtons(QMessageBox::Close);
+    msgBox->setDefaultButton(QMessageBox::Close);
+    msgBox->exec();
+}
+
 void MainWindow::beendenSlot(){
     msgBox->setWindowTitle("Programm beenden");
     msgBox->setText("Sind Sie sicher, dass Sie das Programm beenden möchten?");
@@ -332,7 +375,7 @@ void MainWindow::beendenSlot(){
     msgBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
     msgBox->setDefaultButton(QMessageBox::Yes);
     int ret = msgBox->exec();
-    if (ret == QMessageBox::Yes) this->close();
+    if (ret == QMessageBox::Yes) close();
 }
 
 void MainWindow::aktiviereIArtenSlot(){

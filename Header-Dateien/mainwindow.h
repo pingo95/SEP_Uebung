@@ -30,7 +30,7 @@ private:
 
     QWidget * widgetCentral;
 
-    //Platz für layouts:
+    //Layouts:
     QVBoxLayout * mainLayout;
     QGridLayout * subGridLayout;
     QHBoxLayout * subHBoxLayout;
@@ -38,7 +38,7 @@ private:
     //Plot:
     Interpolationsplot * plot;
 
-    //Button:
+    //Buttons:
     QPushButton * buttonPunktHinzufuegen;
     QPushButton * buttonAchsenAktualisieren;
     QPushButton * buttonAllePunkteLoeschen;
@@ -47,7 +47,7 @@ private:
     QPushButton * buttonAlleIArtenAktivieren;
     QPushButton * buttonAlleIArtenDeaktivieren;
     QPushButton * buttonReset;
-    QPushButton * buttonOptionen;
+    QPushButton * buttonHilfe;
     QPushButton * buttonBeenden;
 
 
@@ -63,7 +63,7 @@ private:
     QListWidget * listWidgetAktiveIArten;
     QListWidget * listWidgetInaktiveIArten;
 
-    //Platz für Labels:
+    //Labels:
     QLabel * labelDefinitionsbereich;
     QLabel * labelXMin;
     QLabel * labelXMax;
@@ -73,18 +73,20 @@ private:
     QLabel * labelPunktperTastatur;
     QLabel * labelXKoord;
     QLabel * labelYKoord;
-    QLabel * labelDummy;
     QLabel * labelListeAktiv;
     QLabel * labelListeInaktiv;
 
-    //Fehlermeldungen & Warnungen
+    //Platzhalter
+    QSpacerItem * spacerItem;
+
+    //Fehlermeldungen & Warnungen & Hilfe
     QMessageBox * msgBox;
 
 protected slots:
     void achsenUpdatenSlot();
     void neuerPunktPerTastaturSlot();
     void resetSlot();
-//    void optionenSlot();
+    void hilfeSlot();
     void beendenSlot();
     void aktiviereIArtenSlot();
     void deaktiviereIArtenSlot();
