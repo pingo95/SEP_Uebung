@@ -5,7 +5,7 @@
 #include "../Header-Dateien/interpolationsverzeichnis.h"
 
 MainWindow::MainWindow(QWidget *parent)
-    : QMainWindow(parent), MINIMUM(-10000), MAXIMUM(10000)
+    : QMainWindow(parent), MINIMUM(-5000), MAXIMUM(5000)
 {
     //Interpolationsarten hinzufügen
     InterpolationsVerzeichnis::instanz()->fuegeIArtenHinzu("Lineare Interpolation",new Linear(),Qt::red);

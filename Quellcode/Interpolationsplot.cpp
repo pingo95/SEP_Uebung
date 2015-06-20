@@ -19,7 +19,7 @@ void Interpolationsplot::replot(){
     setKeyPoints(xIn,yIn);
     if(Punkte.size() > 2){
 //        Punkte.sort();
-        int n = 1000 /*ceil((100*(xMax-xMin)/((double)plot->size().width())))*/;    // relative Wahl von n??
+        int n =1000 /*ceil(xMax-xMin/(((100*(xMax-xMin)/((double)plot->size().width())))))*/;    // relative Wahl von n??
         CustomQPunkteVector PunkteOut;
         QVector<double> xOut, yOut;
         QList<QString>::iterator it = aktiveIArten.begin();
