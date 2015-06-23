@@ -1,12 +1,12 @@
 #ifndef POLYNOM_H
 #define POLYNOM_H
 
-#include "interpolationsart.h"
-class Polynom : public Interpolationsart {
+#include "interpolationtype.h"
+class Polynom : public InterpolationType {
 
 
 public:
-    void berechneInterpolation(CustomQPunkteVector & in, CustomQPunkteVector & out,
+    void calculateInterpolation(PointsVector & in, PointsVector & out,
                                double xMin, double xMax, int n);
 };
 

@@ -14,7 +14,7 @@
 #include <QMessageBox>
 
 
-#include "interpolationsplot.h"
+#include "interpolationplot.h"
 
 class MainWindow : public QMainWindow
 {
@@ -36,19 +36,19 @@ private:
     QHBoxLayout * subHBoxLayout;
 
     //Plot:
-    Interpolationsplot * plot;
+    InterpolationPlot * plot;
 
     //Buttons:
-    QPushButton * buttonPunktHinzufuegen;
-    QPushButton * buttonAchsenAktualisieren;
-    QPushButton * buttonAllePunkteLoeschen;
-    QPushButton * buttonIArtenAktivieren;
-    QPushButton * buttonIArtenDeaktivieren;
-    QPushButton * buttonAlleIArtenAktivieren;
-    QPushButton * buttonAlleIArtenDeaktivieren;
+    QPushButton * buttonAddPoint;
+    QPushButton * buttonUpdateAxes;
+    QPushButton * buttonDeleteAllPoints;
+    QPushButton * buttonActivateITypes;
+    QPushButton * buttonDeactivateIType;
+    QPushButton * buttonActivateAllITypes;
+    QPushButton * buttonDeactivateAllITypes;
     QPushButton * buttonReset;
-    QPushButton * buttonHilfe;
-    QPushButton * buttonBeenden;
+    QPushButton * buttonHelp;
+    QPushButton * buttonShutDown;
 
 
     //SpinBoxes:
@@ -60,38 +60,38 @@ private:
     QDoubleSpinBox * spinBoxYKoord;
 
     //Listen:
-    QListWidget * listWidgetAktiveIArten;
-    QListWidget * listWidgetInaktiveIArten;
+    QListWidget * listWidgetActiveITypes;
+    QListWidget * listWidgetInactiveITypes;
 
     //Labels:
-    QLabel * labelDefinitionsbereich;
+    QLabel * labelDomainOfDefinition;
     QLabel * labelXMin;
     QLabel * labelXMax;
-    QLabel * labelWertebereich;
+    QLabel * labelRange;
     QLabel * labelYMin;
     QLabel * labelYMax;
-    QLabel * labelPunktperTastatur;
+    QLabel * labelPointPerKeyboard;
     QLabel * labelXKoord;
     QLabel * labelYKoord;
-    QLabel * labelListeAktiv;
-    QLabel * labelListeInaktiv;
+    QLabel * labelListeActive;
+    QLabel * labelListeInactive;
 
     //Platzhalter
     QSpacerItem * spacerItem;
 
     //Fehlermeldungen & Warnungen & Hilfe
-    QMessageBox * msgBox;
+    QMessageBox * messageBox;
 
 protected slots:
-    void achsenUpdatenSlot();
-    void neuerPunktPerTastaturSlot();
+    void updateAxesSlot();
+    void newPointPerKeyboardSlot();
     void resetSlot();
-    void hilfeSlot();
-    void beendenSlot();
-    void aktiviereIArtenSlot();
-    void deaktiviereIArtenSlot();
-    void aktiviereAlleIArtenSlot();
-    void deaktiviereAlleIArtenSlot();
+    void helpSlot();
+    void shutDownSlot();
+    void activateITypesSlot();
+    void deactivateITypes();
+    void activateAllITypes();
+    void deactivateAllITypes();
 
 };
 

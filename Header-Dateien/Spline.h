@@ -8,12 +8,12 @@
  */
 
 
-#include "interpolationsart.h"
-class Spline : public Interpolationsart {
+#include "interpolationtype.h"
+class Spline : public InterpolationType {
 
 
 public:
-    void berechneInterpolation(CustomQPunkteVector & in, CustomQPunkteVector & out,
+    void calculateInterpolation(PointsVector & in, PointsVector & out,
                                double xMin, double xMax, int n);
 };
 

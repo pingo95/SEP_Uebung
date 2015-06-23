@@ -15,29 +15,29 @@ TEMPLATE = app
 SOURCES +=\
     Quellcode/qcustomplot.cpp \
     Quellcode/qstceplot.cpp \
-    Quellcode/punkt.cpp \
-    Quellcode/customqpunktevektor.cpp \
     Quellcode/linear.cpp \
     Quellcode/polynom.cpp \
     Quellcode/spline.cpp \
-    Quellcode/interpolationsplot.cpp \
     Quellcode/mainwindow.cpp \
     Quellcode/main.cpp \
-    Quellcode/interpolationsverzeichnis.cpp
+    Quellcode/pointsvector.cpp \
+    Quellcode/point.cpp \
+    Quellcode/interpolationplot.cpp \
+    Quellcode/interpolationregistry.cpp
 
 HEADERS  += \
     Header-Dateien/qcustomplot.h \
     Header-Dateien/qstceplot.h \
-    Header-Dateien/punkt.h \
-    Header-Dateien/customqpunktevektor.h \
-    Header-Dateien/interpolationsart.h \
     Header-Dateien/linear.h \
     Header-Dateien/polynom.h \
     Header-Dateien/splineLib.h \
     Header-Dateien/spline.h \
-    Header-Dateien/interpolationsplot.h \
     Header-Dateien/mainwindow.h \
-    Header-Dateien/interpolationsverzeichnis.h
+    Header-Dateien/pointsvector.h \
+    Header-Dateien/point.h \
+    Header-Dateien/interpolationplot.h \
+    Header-Dateien/interpolationtype.h \
+    Header-Dateien/interpolationregistry.h
 
 win32:RC_FILE = Resources/icon.qrc
 

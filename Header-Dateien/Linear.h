@@ -1,12 +1,12 @@
 #ifndef LINEAR_H
 #define LINEAR_H
 
-#include "interpolationsart.h"
-class Linear : public Interpolationsart {
+#include "interpolationtype.h"
+class Linear : public InterpolationType {
 
 
 public:
-    void berechneInterpolation(CustomQPunkteVector & in, CustomQPunkteVector & out,
+    void calculateInterpolation(PointsVector & in, PointsVector & out,
                                double xMin, double xMax, int n);
 };
 
