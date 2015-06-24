@@ -2,22 +2,21 @@
 #include "../Header-Dateien/linear.h"
 #include "../Header-Dateien/polynom.h"
 #include "../Header-Dateien/spline.h"
-#include "../Header-Dateien/interpolationregistry.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), MINIMUM(-5000), MAXIMUM(5000)
 {
-    //Interpolationsarten hinzufügen
-    InterpolationRegistry::instance()->addIType("Lineare Interpolation",new Linear(),Qt::red);
-    InterpolationRegistry::instance()->addIType("Polynom-Interpolation",new Polynom(),Qt::darkGreen);
-    InterpolationRegistry::instance()->addIType("kubische Spline-Interpolation",new Spline(),Qt::darkBlue);
-
     //centrales Widget initialisieren
     widgetCentral = new QWidget(this);
 
     //Plot initialisieren
     plot = new InterpolationPlot(widgetCentral);
     plot->setMinimumSize(560,480);
+
+    //Interpolationsarten hinzufügen
+    plot->addIType("Lineare Interpolation",new Linear(),Qt::red);
+    plot->addIType("Polynom-Interpolation",new Polynom(),Qt::darkGreen);
+    plot->addIType("kubische Spline-Interpolation",new Spline(),Qt::darkBlue);
 
     //Titel und Hintergrund einstellen
     setWindowTitle("SEP Interpolation Gruppe 11");
@@ -212,7 +211,7 @@ MainWindow::MainWindow(QWidget *parent)
     listWidgetInactiveITypes->setSelectionMode(QAbstractItemView::MultiSelection);
     listWidgetActiveITypes->setSelectionMode(QAbstractItemView::MultiSelection);
 
-    QList<QString> labels = InterpolationRegistry::instance()->getNames();
+    QList<QString> labels = plot->getITypesNames();
     QList<QString>::iterator it=labels.begin();
     for(;it!=labels.end();++it){
         new QListWidgetItem(*it,listWidgetInactiveITypes);
@@ -225,7 +224,6 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete widgetCentral;
-    Proxy::deleteInstance();
 }
 
 void MainWindow::updateAxesSlot(){
@@ -384,12 +382,12 @@ void MainWindow::activateITypesSlot(){
         double tmpRow = listWidgetInactiveITypes->row(changedIArten.takeFirst());
         QListWidgetItem * tmpItem = listWidgetInactiveITypes->takeItem(tmpRow);
         listWidgetActiveITypes->addItem(tmpItem);
-        plot->addITypeWithoutPlotting(tmpItem->text());
+        plot->activateITypeWithoutPlotting(tmpItem->text());
     }
     double tmpRow = listWidgetInactiveITypes->row(changedIArten.takeFirst());
     QListWidgetItem * tmpItem = listWidgetInactiveITypes->takeItem(tmpRow);
     listWidgetActiveITypes->addItem(tmpItem);
-    plot->addIType(tmpItem->text());
+    plot->activateIType(tmpItem->text());
 
 
     buttonDeactivateIType->setDisabled(false);
@@ -407,12 +405,12 @@ void MainWindow::deactivateITypes(){
         double tmpRow = listWidgetActiveITypes->row(changedIArten.takeFirst());
         QListWidgetItem * tmpItem = listWidgetActiveITypes->takeItem(tmpRow);
         listWidgetInactiveITypes->addItem(tmpItem);
-        plot->removeITypeWithoutPlotting(tmpItem->text());
+        plot->deactivateITypeWithoutPlotting(tmpItem->text());
     }
     double tmpRow = listWidgetActiveITypes->row(changedIArten.takeFirst());
     QListWidgetItem * tmpItem = listWidgetActiveITypes->takeItem(tmpRow);
     listWidgetInactiveITypes->addItem(tmpItem);
-    plot->removeIType(tmpItem->text());
+    plot->deactivateIType(tmpItem->text());
 
 
     buttonActivateITypes->setDisabled(false);
@@ -427,11 +425,11 @@ void MainWindow::activateAllITypes(){
     while(listWidgetInactiveITypes->count()>1){
         QListWidgetItem * tmpItem = listWidgetInactiveITypes->takeItem(0);
         listWidgetActiveITypes->addItem(tmpItem);
-        plot->addITypeWithoutPlotting(tmpItem->text());
+        plot->activateITypeWithoutPlotting(tmpItem->text());
     }
     QListWidgetItem * tmpItem = listWidgetInactiveITypes->takeItem(0);
     listWidgetActiveITypes->addItem(tmpItem);
-    plot->addIType(tmpItem->text());
+    plot->activateIType(tmpItem->text());
 
     buttonActivateITypes->setDisabled(true);
     buttonActivateAllITypes->setDisabled(true);
@@ -450,5 +448,5 @@ void MainWindow::deactivateAllITypes(){
     buttonDeactivateIType->setDisabled(true);
     buttonDeactivateAllITypes->setDisabled(true);
 
-    plot->removeAllITypes();
+    plot->deactivateAllITypes();
 }

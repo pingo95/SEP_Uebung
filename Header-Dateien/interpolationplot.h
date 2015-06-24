@@ -5,6 +5,13 @@
 #include <QList>
 #include "interpolationtype.h"
 #include <QMessageBox>
+#include <QMap>
+
+struct IType{
+    int id;
+    InterpolationType * algorithm;
+    Qt::GlobalColor color;
+};
 
 class InterpolationPlot : public QStcePlot {
     Q_OBJECT
@@ -14,15 +21,20 @@ public:
 
     void replot();
     void reset();
-    void addIType(QString type);
-    void addITypeWithoutPlotting(QString type);
-    void removeIType(QString type);
-    void removeITypeWithoutPlotting(QString type);
-    void removeAllITypes();
+    void addIType(QString name, InterpolationType * algorithm,
+                         Qt::GlobalColor color = Qt::black);
+    QList<QString> getITypesNames();
+    void activateIType(QString type);
+    void activateITypeWithoutPlotting(QString type);
+    void deactivateIType(QString type);
+    void deactivateITypeWithoutPlotting(QString type);
+    void deactivateAllITypes();
 
-protected:
 private:
+    static int idCounter;
+
     PointsVector Points;
+    QMap<QString,IType*> ITypes;
     QList<QString> activeITypes;
     QMessageBox * errormessageBox;
     int epsilon;

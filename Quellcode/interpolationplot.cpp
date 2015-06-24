@@ -1,5 +1,6 @@
 #include "../Header-Dateien/interpolationplot.h"
-#include "../Header-Dateien/interpolationregistry.h"
+
+int InterpolationPlot::idCounter = 1;
 
 InterpolationPlot::InterpolationPlot(QWidget * parent): QStcePlot(parent,true),
     errormessageBox(new QMessageBox(this)), epsilon(10){
@@ -24,7 +25,7 @@ void InterpolationPlot::replot(){
         QList<QString>::iterator it = activeITypes.begin();
         for(; it != activeITypes.end(); ++it){
             PointsOut.clear();
-            IType * tmpIType = InterpolationRegistry::instance()->getInformations(*it);
+            IType * tmpIType = ITypes[*it];
             tmpIType->algorithm->calculateInterpolation(Points,PointsOut,xMin,xMax,n);
             PointsOut.getPointsAsSeperateVectors(xOut,yOut);
             setPoints(xOut,yOut,tmpIType->id,tmpIType->color);
@@ -41,25 +42,40 @@ void InterpolationPlot::reset(){
     replot();
 }
 
-void InterpolationPlot::addIType(QString type){
+void InterpolationPlot::addIType(QString name, InterpolationType *algorithm,
+                                                Qt::GlobalColor color){
+    IType * tmpIType = new IType;
+    tmpIType->id = ++InterpolationPlot::idCounter;
+    tmpIType->algorithm = algorithm;
+    tmpIType->color = color;
+    ITypes[name] = tmpIType;
+    QVector<double> x;
+    setPoints(x,x,tmpIType->id,tmpIType->color);
+}
+
+QList<QString> InterpolationPlot::getITypesNames(){
+    return ITypes.keys();
+}
+
+void InterpolationPlot::activateIType(QString type){
     activeITypes.append(type);
     replot();
 }
 
-void InterpolationPlot::addITypeWithoutPlotting(QString type){
+void InterpolationPlot::activateITypeWithoutPlotting(QString type){
     activeITypes.append(type);
 }
 
-void InterpolationPlot::removeIType(QString type){
+void InterpolationPlot::deactivateIType(QString type){
     activeITypes.removeOne(type);
     replot();
 }
 
-void InterpolationPlot::removeITypeWithoutPlotting(QString type){
+void InterpolationPlot::deactivateITypeWithoutPlotting(QString type){
     activeITypes.removeOne(type);
 }
 
-void InterpolationPlot::removeAllITypes(){
+void InterpolationPlot::deactivateAllITypes(){
     activeITypes.clear();
     replot();
 }

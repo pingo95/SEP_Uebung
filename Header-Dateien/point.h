@@ -14,11 +14,13 @@ public:
     void setX(double x);
     double getY() const;
     void setY(double y);
-
+    bool isSet() const;
 private:
     Point();
     double x;
     double y;
+    bool statusX;
+    bool statusY;
 };
 
 #endif // POINT
