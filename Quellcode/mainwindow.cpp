@@ -225,7 +225,6 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete widgetCentral;
-    if(spacerItem != NULL) delete spacerItem;
     Proxy::deleteInstance();
 }
 

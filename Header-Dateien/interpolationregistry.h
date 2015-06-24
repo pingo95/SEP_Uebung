@@ -19,13 +19,18 @@ public:
                          Qt::GlobalColor color = Qt::black);
     IType * getInformations(QString name);
     QList<QString> getNames();
+
 protected:
     InterpolationRegistry();
 private:
     static InterpolationRegistry * _Instance;
-    QMap<QString,IType*> ITypes;
     static int idCounter;
+
+    QMap<QString,IType*> ITypes;
+
+    ~InterpolationRegistry();
     void deleteInstance();
+
     friend class Proxy;
 };
 
@@ -33,6 +38,7 @@ class Proxy{
     static void deleteInstance(){
         InterpolationRegistry::instance()->deleteInstance();
     }
+
     friend class MainWindow;
 };
 

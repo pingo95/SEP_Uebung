@@ -4,7 +4,5 @@
         <file alias="2left">2left.PNG</file>
         <file alias="2right">2right.PNG</file>
         <file alias="left">left.PNG</file>
-        <file alias="Linear">Linear.PNG</file>
-        <file alias="Spline">Spline.PNG</file>
     </qresource>
 </RCC>

@@ -1,4 +1,4 @@
-#include "..\Header-Dateien\linear.h"
+#include "../Header-Dateien/linear.h"
 #include "../Header-Dateien/pointsvector.h"
 void Linear::calculateInterpolation(PointsVector &in,  PointsVector &out,
                                    double xMin, double xMax, int n){

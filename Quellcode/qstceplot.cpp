@@ -41,6 +41,7 @@ void QStcePlot::setPoints(QVector<double> &x, QVector<double> &y, int graphI, QC
     while(plot->graphCount() < graphI + 1){
         plot->addGraph();
     }
+    std::cout << "ID: " << graphI << "\t Farbe: " << color.name().toStdString() << std::endl;
     plot->graph(plot->graphCount()-1)->setPen(QPen(color));
     plot->graph(graphI)->setData(x,y);
     plot->replot();

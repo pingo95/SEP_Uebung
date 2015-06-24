@@ -1,4 +1,4 @@
-#include "..\Header-Dateien\spline.h"
+#include "../Header-Dateien/spline.h"
 #include "../Header-Dateien/splineLib.h"
 #include "../Header-Dateien/pointsvector.h"
 void Spline::calculateInterpolation(PointsVector &in,  PointsVector &out,

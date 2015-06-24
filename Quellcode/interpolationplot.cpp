@@ -1,4 +1,4 @@
-#include "..\Header-Dateien\interpolationplot.h"
+#include "../Header-Dateien/interpolationplot.h"
 #include "../Header-Dateien/interpolationregistry.h"
 
 InterpolationPlot::InterpolationPlot(QWidget * parent): QStcePlot(parent,true),
@@ -9,7 +9,7 @@ InterpolationPlot::InterpolationPlot(QWidget * parent): QStcePlot(parent,true),
 }
 
 InterpolationPlot::~InterpolationPlot(){
-
+    delete errormessageBox;
 }
 
 void InterpolationPlot::replot(){
@@ -22,13 +22,14 @@ void InterpolationPlot::replot(){
         PointsVector PointsOut;
         QVector<double> xOut, yOut;
         QList<QString>::iterator it = activeITypes.begin();
-        for(int i=2; it != activeITypes.end(); ++it, ++i){
+        for(; it != activeITypes.end(); ++it){
             PointsOut.clear();
             IType * tmpIType = InterpolationRegistry::instance()->getInformations(*it);
             tmpIType->algorithm->calculateInterpolation(Points,PointsOut,xMin,xMax,n);
             PointsOut.getPointsAsSeperateVectors(xOut,yOut);
             setPoints(xOut,yOut,tmpIType->id,tmpIType->color);
         }
+
     }
     QStcePlot::replot();
 }
