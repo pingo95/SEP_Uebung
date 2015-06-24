@@ -7,14 +7,16 @@
 #include <QMessageBox>
 #include <QMap>
 
+
+class InterpolationPlot : public QStcePlot {
+    Q_OBJECT
+
 struct IType{
     int id;
     InterpolationType * algorithm;
     Qt::GlobalColor color;
 };
 
-class InterpolationPlot : public QStcePlot {
-    Q_OBJECT
 public:
     InterpolationPlot(QWidget * parent);
     ~InterpolationPlot();

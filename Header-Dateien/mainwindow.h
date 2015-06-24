@@ -89,9 +89,9 @@ protected slots:
     void helpSlot();
     void shutDownSlot();
     void activateITypesSlot();
-    void deactivateITypes();
-    void activateAllITypes();
-    void deactivateAllITypes();
+    void deactivateITypesSlot();
+    void activateAllITypesSlot();
+    void deactivateAllITypesSlot();
 
 };
 

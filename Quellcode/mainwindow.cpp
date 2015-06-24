@@ -179,9 +179,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(buttonHelp,SIGNAL(clicked(bool)),this,SLOT(helpSlot()));
     connect(buttonShutDown,SIGNAL(clicked(bool)),this,SLOT(shutDownSlot()));
     connect(buttonActivateITypes,SIGNAL(clicked(bool)),this,SLOT(activateITypesSlot()));
-    connect(buttonDeactivateIType,SIGNAL(clicked(bool)),this,SLOT(deactivateITypes()));
-    connect(buttonActivateAllITypes,SIGNAL(clicked(bool)),this,SLOT(activateAllITypes()));
-    connect(buttonDeactivateAllITypes,SIGNAL(clicked(bool)),this,SLOT(deactivateAllITypes()));
+    connect(buttonDeactivateIType,SIGNAL(clicked(bool)),this,SLOT(deactivateITypesSlot()));
+    connect(buttonActivateAllITypes,SIGNAL(clicked(bool)),this,SLOT(activateAllITypesSlot()));
+    connect(buttonDeactivateAllITypes,SIGNAL(clicked(bool)),this,SLOT(deactivateAllITypesSlot()));
 
     //Achseninitialisierung
     spinBoxXMin->setMinimum(MINIMUM);
@@ -245,19 +245,22 @@ void MainWindow::updateAxesSlot(){
         messageBox->setDetailedText("");
         messageBox->setDetailedText(str);
         messageBox->setIcon(QMessageBox::Critical);
-        messageBox->setStandardButtons(QMessageBox::Discard);
-        QPushButton * tmpButton = new QPushButton("Überarbeiten");
-        messageBox->addButton(tmpButton,QMessageBox::AcceptRole);
-        messageBox->setDefaultButton(QMessageBox::Discard);
-        int ret = messageBox->exec();
-        messageBox->removeButton(tmpButton);
-        delete tmpButton;
-        if(ret == QMessageBox::AcceptRole) return;
-        plot->getRange(xMin,xMax,yMin,yMax);
-        spinBoxXMin->setValue(xMin);
-        spinBoxXMax->setValue(xMax);
-        spinBoxYMin->setValue(yMin);
-        spinBoxYMax->setValue(yMax);
+        QPushButton * tmpButton1 = messageBox->addButton(QMessageBox::Discard);
+        QPushButton * tmpButton2 = new QPushButton("Überarbeiten");
+        messageBox->addButton(tmpButton2,QMessageBox::AcceptRole);
+        messageBox->setDefaultButton(tmpButton1);
+        messageBox->exec();
+        if(messageBox->clickedButton()==tmpButton1){
+            plot->getRange(xMin,xMax,yMin,yMax);
+            spinBoxXMin->setValue(xMin);
+            spinBoxXMax->setValue(xMax);
+            spinBoxYMin->setValue(yMin);
+            spinBoxYMax->setValue(yMax);
+        }
+        messageBox->removeButton(tmpButton1);
+        messageBox->removeButton(tmpButton2);
+        delete tmpButton1;
+        delete tmpButton2;
         return;
     }
     plot->setRange(xMin,xMax,yMin,yMax);
@@ -288,28 +291,29 @@ void MainWindow::newPointPerKeyboardSlot(){
         messageBox->setDetailedText("");
         messageBox->setDetailedText(str);
         messageBox->setIcon(QMessageBox::Warning);
-        messageBox->setStandardButtons(QMessageBox::Discard);
-        QPushButton * tmpButton = new QPushButton("Hinzufügen");
-        QPushButton * tmpButton2 = new QPushButton("Überarbeiten");
-        messageBox->addButton(tmpButton,QMessageBox::ApplyRole);
-        messageBox->addButton(tmpButton2,QMessageBox::AcceptRole);
-        messageBox->setDefaultButton(QMessageBox::Discard);
-        int ret = messageBox->exec();
-        messageBox->removeButton(tmpButton);
+        QPushButton * tmpButton1 = messageBox->addButton(QMessageBox::Discard);
+        QPushButton * tmpButton2 = new QPushButton("Hinzufügen");
+        QPushButton * tmpButton3 = new QPushButton("Überarbeiten");
+        messageBox->addButton(tmpButton2,QMessageBox::ApplyRole);
+        messageBox->addButton(tmpButton3,QMessageBox::AcceptRole);
+        messageBox->setDefaultButton(tmpButton1);
+        messageBox->exec();
+        if(messageBox->clickedButton()!=tmpButton1){
+            spinBoxXKoord->setValue(0);
+            spinBoxYKoord->setValue(0);
+            if(messageBox->clickedButton()==tmpButton2) emit plot->plotOnClickEvent(x,y,Qt::LeftButton);
+        }
+        messageBox->removeButton(tmpButton1);
         messageBox->removeButton(tmpButton2);
-        delete tmpButton;
+        messageBox->removeButton(tmpButton3);
+        delete tmpButton1;
         delete tmpButton2;
-        if(ret == QMessageBox::AcceptRole) return;
-        spinBoxXKoord->setValue(0);
-        spinBoxYKoord->setValue(0);
-        if(ret == QMessageBox::Discard) return;
-        emit plot->plotOnClickEvent(x,y,Qt::LeftButton);
+        delete tmpButton3;
+        return;
     }
-    else {
-        spinBoxXKoord->setValue(0);
-        spinBoxYKoord->setValue(0);
-        emit plot->plotOnClickEvent(x,y,Qt::LeftButton);
-    }
+    spinBoxXKoord->setValue(0);
+    spinBoxYKoord->setValue(0);
+    emit plot->plotOnClickEvent(x,y,Qt::LeftButton);
 }
 
 void MainWindow::resetSlot(){
@@ -359,9 +363,11 @@ void MainWindow::helpSlot(){
                     "drücken Sie 'Beenden' und bestätigen Sie mit der 'Enter'-Taste.");
     messageBox->setDetailedText("");
     messageBox->setIcon(QMessageBox::Information);
-    messageBox->setStandardButtons(QMessageBox::Close);
-    messageBox->setDefaultButton(QMessageBox::Close);
+    QPushButton * tmpButton1 = messageBox->addButton(QMessageBox::Close);
+    messageBox->setDefaultButton(tmpButton1);
     messageBox->exec();
+    messageBox->removeButton(tmpButton1);
+    delete tmpButton1;
 }
 
 void MainWindow::shutDownSlot(){
@@ -369,10 +375,22 @@ void MainWindow::shutDownSlot(){
     messageBox->setText("Sind Sie sicher, dass Sie das Programm beenden möchten?");
     messageBox->setDetailedText("");
     messageBox->setIcon(QMessageBox::Question);
-    messageBox->setStandardButtons(QMessageBox::Yes | QMessageBox::No);
-    messageBox->setDefaultButton(QMessageBox::Yes);
-    int ret = messageBox->exec();
-    if (ret == QMessageBox::Yes) close();
+    QPushButton * tmpButton1 = messageBox->addButton(QMessageBox::Yes);
+    QPushButton * tmpButton2 = messageBox->addButton(QMessageBox::No);
+    messageBox->setDefaultButton(tmpButton1);
+    messageBox->exec();
+
+    if (messageBox->clickedButton()==tmpButton1){
+        messageBox->removeButton(tmpButton1);
+        messageBox->removeButton(tmpButton2);
+        delete tmpButton1;
+        delete tmpButton2;
+        close();
+    }
+    messageBox->removeButton(tmpButton1);
+    messageBox->removeButton(tmpButton2);
+    delete tmpButton1;
+    delete tmpButton2;
 }
 
 void MainWindow::activateITypesSlot(){
@@ -398,7 +416,7 @@ void MainWindow::activateITypesSlot(){
     }
 }
 
-void MainWindow::deactivateITypes(){
+void MainWindow::deactivateITypesSlot(){
     QList<QListWidgetItem*> changedIArten = listWidgetActiveITypes->selectedItems();
     if(changedIArten.size()==0) return;
     while(changedIArten.size()>1){
@@ -421,7 +439,7 @@ void MainWindow::deactivateITypes(){
     }
 }
 
-void MainWindow::activateAllITypes(){
+void MainWindow::activateAllITypesSlot(){
     while(listWidgetInactiveITypes->count()>1){
         QListWidgetItem * tmpItem = listWidgetInactiveITypes->takeItem(0);
         listWidgetActiveITypes->addItem(tmpItem);
@@ -437,7 +455,7 @@ void MainWindow::activateAllITypes(){
     buttonDeactivateAllITypes->setDisabled(false);
 }
 
-void MainWindow::deactivateAllITypes(){
+void MainWindow::deactivateAllITypesSlot(){
     while(listWidgetActiveITypes->count()>0){
         QListWidgetItem * tmpItem = listWidgetActiveITypes->takeItem(0);
         listWidgetInactiveITypes->addItem(tmpItem);

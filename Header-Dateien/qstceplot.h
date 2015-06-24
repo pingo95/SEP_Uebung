@@ -76,8 +76,10 @@ public:
     \brief force the QStcePlot widget to refresh itself
     */    
     void replot();
-
 protected:
+    QSize getPlotSize() const;
+
+private:
     QVBoxLayout* layout;
     QCustomPlot* plot;
     QList<QCPItemEllipse> markers;

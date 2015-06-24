@@ -11,26 +11,36 @@ InterpolationPlot::InterpolationPlot(QWidget * parent): QStcePlot(parent,true),
 
 InterpolationPlot::~InterpolationPlot(){
     delete errormessageBox;
+    QList<IType*>::iterator it = ITypes.values().begin();
+        for(;it!=ITypes.values().end();++it) delete (*it);
 }
 
 void InterpolationPlot::replot(){
-    for(int i=0; i<plot->graphCount(); ++i) plot->graph(i)->clearData();
     QVector<double> xIn,yIn;
+    for(int i=2; i <= ITypes.count()+1; ++i) setPoints(xIn,yIn,i);
     Points.getPointsAsSeperateVectors(xIn,yIn);
     setKeyPoints(xIn,yIn);
     if(Points.size() > 2){
         int n =1000;
         PointsVector PointsOut;
         QVector<double> xOut, yOut;
+        double xMin,xMax,yMin,yMax;
+        getRange(xMin,xMax,yMin,yMax);
+        QMap<int,IType*> tmpITypes;
         QList<QString>::iterator it = activeITypes.begin();
-        for(; it != activeITypes.end(); ++it){
-            PointsOut.clear();
+        for(;it != activeITypes.end(); ++it){
             IType * tmpIType = ITypes[*it];
+            tmpITypes.insert(tmpIType->id,tmpIType);
+        }
+        QList<int> tmpIdList = tmpITypes.keys();
+        QList<int>::iterator it2 = tmpIdList.begin();
+        for(;it2 != tmpIdList.end(); ++it2){
+            PointsOut.clear();
+            IType * tmpIType = tmpITypes[*it2];
             tmpIType->algorithm->calculateInterpolation(Points,PointsOut,xMin,xMax,n);
             PointsOut.getPointsAsSeperateVectors(xOut,yOut);
             setPoints(xOut,yOut,tmpIType->id,tmpIType->color);
         }
-
     }
     QStcePlot::replot();
 }
@@ -48,7 +58,7 @@ void InterpolationPlot::addIType(QString name, InterpolationType *algorithm,
     tmpIType->id = ++InterpolationPlot::idCounter;
     tmpIType->algorithm = algorithm;
     tmpIType->color = color;
-    ITypes[name] = tmpIType;
+    ITypes.insert(name,tmpIType);
     QVector<double> x;
     setPoints(x,x,tmpIType->id,tmpIType->color);
 }
@@ -81,8 +91,11 @@ void InterpolationPlot::deactivateAllITypes(){
 }
 
 int InterpolationPlot::findBestMatch(double x, double y){
-    double epsilonX = epsilon * (xMax-xMin)/plot->size().width();
-    double epsilonY = epsilon * (yMax-yMin)/plot->size().height();
+    double xMin,xMax,yMin,yMax;
+    getRange(xMin,xMax,yMin,yMax);
+    QSize plotSize = getPlotSize();
+    double epsilonX = epsilon * (xMax-xMin)/plotSize.width();
+    double epsilonY = epsilon * (yMax-yMin)/plotSize.height();
     double bestMatch=100000;
     int posBestMatch=-1;
     for(int i=0; i < Points.size();++i){
@@ -114,26 +127,24 @@ void InterpolationPlot::changePointsSlot(double x, double y, Qt::MouseButton btn
             errormessageBox->setDetailedText("");
             errormessageBox->setDetailedText(str);
             errormessageBox->setIcon(QMessageBox::Warning);
-            errormessageBox->setStandardButtons(QMessageBox::Discard);
-            QPushButton * tmpButton = new QPushButton("Überschreiben");
-            errormessageBox->addButton(tmpButton,QMessageBox::ApplyRole);
-            errormessageBox->setDefaultButton(QMessageBox::Discard);
-            int ret = errormessageBox->exec();
-            errormessageBox->removeButton(tmpButton);
-            delete tmpButton;
-            if(ret == QMessageBox::Discard) return;
-            Points[pos].setY(y);
+            QPushButton * tmpButton1 = errormessageBox->addButton(QMessageBox::Discard);
+            QPushButton * tmpButton2 = new QPushButton("Überschreiben");
+            errormessageBox->addButton(tmpButton2,QMessageBox::ApplyRole);
+            errormessageBox->setDefaultButton(tmpButton1);
+            errormessageBox->exec();
+            if(errormessageBox->clickedButton()==tmpButton2) Points[pos].setY(y);
+            errormessageBox->removeButton(tmpButton1);
+            errormessageBox->removeButton(tmpButton2);
+            delete tmpButton1;
+            delete tmpButton2;
         }
         else Points.append(Point(x,y));
         Points.sort();
     }else{
-        do{
-            int posBestMatch = findBestMatch(x,y);
-            if (posBestMatch != -1){
-                Points.remove(posBestMatch);
-                epsilon = 10;
-                break;
-            }
+        int posBestMatch = findBestMatch(x,y);
+        if (posBestMatch != -1){
+            Points.remove(posBestMatch);
+        }else{
             errormessageBox->setWindowTitle("Punkt nicht gefunden");
             errormessageBox->setText("Es konnte kein Punkt in der Nähe ihres Mausklickes "
                             "gefunden werden.\n Soll in einer größeren Umgebung nach "
@@ -145,12 +156,31 @@ void InterpolationPlot::changePointsSlot(double x, double y, Qt::MouseButton btn
             errormessageBox->setDetailedText("");
             errormessageBox->setDetailedText(str);
             errormessageBox->setIcon(QMessageBox::Warning);
-            errormessageBox->setStandardButtons(QMessageBox::Retry | QMessageBox::Discard);
-            errormessageBox->setDefaultButton(QMessageBox::Discard);
-            int ret = errormessageBox->exec();
-            if(ret == QMessageBox::Discard) return;
-            epsilon *= 1.5;
-        }while(true);
+            QPushButton * tmpButton1 = errormessageBox->addButton(QMessageBox::Discard);
+            QPushButton * tmpButton2 = errormessageBox->addButton(QMessageBox::Retry);
+            errormessageBox->setDefaultButton(tmpButton1);
+            do{
+                epsilon *= 1.5;
+                int posBestMatch = findBestMatch(x,y);
+                if (posBestMatch != -1){
+                    Points.remove(posBestMatch);
+                    epsilon = 10;
+                    break;
+                }
+                errormessageBox->exec();
+                if(errormessageBox->clickedButton()==tmpButton1){
+                    errormessageBox->removeButton(tmpButton1);
+                    errormessageBox->removeButton(tmpButton2);
+                    delete tmpButton1;
+                    delete tmpButton2;
+                    return;
+                }
+            }while(true);
+            errormessageBox->removeButton(tmpButton1);
+            errormessageBox->removeButton(tmpButton2);
+            delete tmpButton1;
+            delete tmpButton2;
+        }
     }
     replot();
 }

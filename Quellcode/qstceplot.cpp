@@ -50,6 +50,10 @@ void QStcePlot::replot()
     plot->replot();
 }
 
+QSize QStcePlot::getPlotSize() const{
+    return plot->size();
+}
+
 void QStcePlot::mouseClickRecv (QMouseEvent *  event  ){
     double mouse_x,mouse_y,x,y;
     mouse_x = event->x();
