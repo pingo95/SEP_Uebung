@@ -1,6 +1,6 @@
 #include "../Header-Dateien/interpolationplot.h"
 
-int InterpolationPlot::idCounter = 1;
+int InterpolationPlot::idCounter = 0;
 
 InterpolationPlot::InterpolationPlot(QWidget * parent): QStcePlot(parent,true),
     errormessageBox(new QMessageBox(this)), epsilon(10){
@@ -11,13 +11,14 @@ InterpolationPlot::InterpolationPlot(QWidget * parent): QStcePlot(parent,true),
 
 InterpolationPlot::~InterpolationPlot(){
     delete errormessageBox;
-    QList<IType*>::iterator it = ITypes.values().begin();
-        for(;it!=ITypes.values().end();++it) delete (*it);
+    QList<IType*> toBeDeletedITypes = ITypes.values();
+    QList<IType*>::iterator it = toBeDeletedITypes.begin();
+    for(;it!=toBeDeletedITypes.end();++it) delete (*it);
 }
 
 void InterpolationPlot::replot(){
     QVector<double> xIn,yIn;
-    for(int i=2; i <= ITypes.count()+1; ++i) setPoints(xIn,yIn,i);
+    for(int i=1; i <= ITypes.count(); ++i) setPoints(xIn,yIn,i);
     Points.getPointsAsSeperateVectors(xIn,yIn);
     setKeyPoints(xIn,yIn);
     if(Points.size() > 2){
@@ -116,7 +117,7 @@ void InterpolationPlot::changePointsSlot(double x, double y, Qt::MouseButton btn
         if(pos != -1){
             errormessageBox->setWindowTitle("Punkt existiert schon");
             errormessageBox->setText("An der x-Position, an der Sie einen Punkt hinzufügen wollen,"
-                            " existiert bereits ein Punkt.\n Soll dieser Punkt mit den neuen"
+                            " existiert bereits ein Punkt.\nSoll dieser Punkt mit den neuen"
                             " Werten überschrieben werden oder soll der neue Punkt verworfen "
                             "werden?");
             QString str= "Damit korrekte Interpolationen durchgeführt werden können, dürfen keine "
