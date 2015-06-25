@@ -5,13 +5,9 @@ int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
 
-#ifndef QT_NO_TRANSLATION
-    QString translatorFileName = QLatin1String("qt_");
-    translatorFileName += QLocale::system().name();
-    QTranslator *translator = new QTranslator(&app);
-    if (translator->load(translatorFileName, QLibraryInfo::location(QLibraryInfo::TranslationsPath)))
-        app.installTranslator(translator);
-#endif
+    QTranslator translator;
+    translator.load("qt_" + QLocale::system().name(), QLibraryInfo::location(QLibraryInfo::TranslationsPath));
+    app.installTranslator(&translator);
 
     MainWindow w;
     w.show();

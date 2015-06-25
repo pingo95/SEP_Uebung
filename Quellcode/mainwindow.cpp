@@ -298,7 +298,7 @@ void MainWindow::newPointPerKeyboardSlot(){
         messageBox->addButton(tmpButton3,QMessageBox::AcceptRole);
         messageBox->setDefaultButton(tmpButton1);
         messageBox->exec();
-        if(messageBox->clickedButton()!=tmpButton1){
+        if(messageBox->clickedButton()!=tmpButton3){
             spinBoxXKoord->setValue(0);
             spinBoxYKoord->setValue(0);
             if(messageBox->clickedButton()==tmpButton2) emit plot->plotOnClickEvent(x,y,Qt::LeftButton);
@@ -379,14 +379,7 @@ void MainWindow::shutDownSlot(){
     QPushButton * tmpButton2 = messageBox->addButton(QMessageBox::No);
     messageBox->setDefaultButton(tmpButton1);
     messageBox->exec();
-
-    if (messageBox->clickedButton()==tmpButton1){
-        messageBox->removeButton(tmpButton1);
-        messageBox->removeButton(tmpButton2);
-        delete tmpButton1;
-        delete tmpButton2;
-        close();
-    }
+    if (messageBox->clickedButton()==tmpButton1) close();
     messageBox->removeButton(tmpButton1);
     messageBox->removeButton(tmpButton2);
     delete tmpButton1;
