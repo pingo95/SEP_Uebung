@@ -16,6 +16,7 @@ class QCustomPlot;
   - refreshing the current plot
   - passing of mouse click events
 */
+namespace graphics{
 class QStcePlot : public QWidget{
     Q_OBJECT
 public:
@@ -105,5 +106,7 @@ signals:
     */
     void plotOnClickEvent (double xVal, double yVal, Qt::MouseButton btn);
 };
+
+}
 
 #endif

@@ -1,6 +1,6 @@
 #include "../Header-Dateien/qstceplot.h"
 
-QStcePlot::QStcePlot(QWidget* q, bool sorted){
+graphics::QStcePlot::QStcePlot(QWidget* q, bool sorted){
     plot = new QCustomPlot(q,sorted);
 
     layout = new QVBoxLayout(q);
@@ -12,7 +12,7 @@ QStcePlot::QStcePlot(QWidget* q, bool sorted){
     QObject::connect(plot,SIGNAL(mousePress(QMouseEvent*)),this,SLOT(mouseClickRecv(QMouseEvent*)));
 }
 
-void QStcePlot::setRange(double xmin, double xmax, double ymin, double ymax){
+void graphics::QStcePlot::setRange(double xmin, double xmax, double ymin, double ymax){
     plot->xAxis->setRangeLower(xmin); xMin = xmin;
     plot->xAxis->setRangeUpper(xmax); xMax = xmax;
     plot->yAxis->setRangeLower(ymin); yMin = ymin;
@@ -20,14 +20,14 @@ void QStcePlot::setRange(double xmin, double xmax, double ymin, double ymax){
     plot->replot();
 }
 
-void QStcePlot::getRange(double &xmin, double &xmax, double &ymin, double &ymax){
+void graphics::QStcePlot::getRange(double &xmin, double &xmax, double &ymin, double &ymax){
     xmin = xMin;
     ymin = yMin;
     xmax = xMax;
     ymax = yMax;
 }
 
-void QStcePlot::setKeyPoints(QVector<double> &x, QVector<double> &y){
+void graphics::QStcePlot::setKeyPoints(QVector<double> &x, QVector<double> &y){
     plot->graph(0)->setData(x, y);
     plot->graph(0)->setLineStyle(QCPGraph::lsNone);
     plot->graph(0)->setScatterStyle(QCPScatterStyle::ssDisc);
@@ -36,7 +36,7 @@ void QStcePlot::setKeyPoints(QVector<double> &x, QVector<double> &y){
 
 }
 
-void QStcePlot::setPoints(QVector<double> &x, QVector<double> &y, int graphI, QColor color){
+void graphics::QStcePlot::setPoints(QVector<double> &x, QVector<double> &y, int graphI, QColor color){
     while(plot->graphCount() < graphI + 1){
         plot->addGraph();
     }
@@ -45,16 +45,16 @@ void QStcePlot::setPoints(QVector<double> &x, QVector<double> &y, int graphI, QC
     plot->replot();
 }
 
-void QStcePlot::replot()
+void graphics::QStcePlot::replot()
 {
     plot->replot();
 }
 
-QSize QStcePlot::getPlotSize() const{
+QSize graphics::QStcePlot::getPlotSize() const{
     return plot->size();
 }
 
-void QStcePlot::mouseClickRecv (QMouseEvent *  event  ){
+void graphics::QStcePlot::mouseClickRecv (QMouseEvent *  event  ){
     double mouse_x,mouse_y,x,y;
     mouse_x = event->x();
     mouse_y = event->y();

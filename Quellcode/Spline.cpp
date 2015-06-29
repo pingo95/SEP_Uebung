@@ -1,7 +1,7 @@
 #include "../Header-Dateien/spline.h"
 #include "../Header-Dateien/splineLib.h"
 #include "../Header-Dateien/pointsvector.h"
-void Spline::calculateInterpolation(PointsVector &in,  PointsVector &out,
+void numeric::Spline::calculateInterpolation(custom_types::PointsVector &in,  custom_types::PointsVector &out,
                                    double xMin, double xMax, int n) {
     tk::spline s;
     QVector<double> x,y;
@@ -11,7 +11,7 @@ void Spline::calculateInterpolation(PointsVector &in,  PointsVector &out,
     out.resize(n+1);
     for(int i=0; i<=n; ++i){
         double tmpX = i*h+xMin;
-        Point tmpPoint(tmpX,s(tmpX));
+        custom_types::Point tmpPoint(tmpX,s(tmpX));
         out[i] = tmpPoint;
     }
 }

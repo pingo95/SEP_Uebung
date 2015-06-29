@@ -1,10 +1,12 @@
 #ifndef POINT
 #define POINT
 #include <QVector>
-class Point{
-    friend class QVector<Point>;
-public:
 
+namespace custom_types{
+
+class Point{
+public:
+    Point();
     Point(double x, double y);
     Point(const Point & rhs);
     Point& operator=(const Point & rhs);
@@ -16,12 +18,13 @@ public:
     void setY(double y);
     bool isSet() const;
 private:
-    Point();
     double x;
     double y;
     bool statusX;
     bool statusY;
 };
+
+}
 
 #endif // POINT
 

@@ -7,12 +7,12 @@
 #include <QMessageBox>
 #include <QMap>
 
-
-class InterpolationPlot : public QStcePlot {
+namespace graphics{
+class InterpolationPlot : public graphics::QStcePlot {
     Q_OBJECT
 
 struct IType{
-    InterpolationType * algorithm;
+    numeric::InterpolationType * algorithm;
     Qt::GlobalColor color;
 };
 
@@ -20,9 +20,8 @@ public:
     InterpolationPlot(QWidget * parent);
     ~InterpolationPlot();
 
-    void replot();
     void reset();
-    void addIType(QString name, InterpolationType * algorithm,
+    void addIType(QString name, numeric::InterpolationType * algorithm,
                          Qt::GlobalColor color = Qt::black);
     QList<QString> getITypesNames();
     void activateIType(QString type);
@@ -32,13 +31,14 @@ public:
     void deactivateAllITypes();
 
 private:
-    PointsVector Points;
+    custom_types::PointsVector Points;
     QMap<QString,IType*> ITypes;
     QList<QString> activeITypes;
     int activeITypesCount;
     QMessageBox * errormessageBox;
     int epsilon;
 
+    void replot();
     int findBestMatch(double x, double y);
 
 protected slots:
@@ -46,5 +46,7 @@ protected slots:
     void deleteAllPointsSlot();
 signals:
 };
+
+}
 
 #endif // INTERPOLATIONPLOT_H

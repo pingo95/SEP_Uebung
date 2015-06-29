@@ -1,9 +1,10 @@
 #ifndef POINTSVECTOR
 #define POINTSVECTOR
 
-
 #include <QVector>
 #include "point.h"
+
+namespace custom_types{
 class PointsVector : public QVector<Point>{
    public:
     void sort();
@@ -11,7 +12,7 @@ class PointsVector : public QVector<Point>{
     int findEqualX(double x);
 };
 
-
+}
 
 
 #endif // POINTSVECTOR

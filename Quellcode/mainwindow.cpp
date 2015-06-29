@@ -3,20 +3,20 @@
 #include "../Header-Dateien/polynom.h"
 #include "../Header-Dateien/spline.h"
 
-MainWindow::MainWindow(QWidget *parent)
+graphics::MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), MINIMUM(-5000), MAXIMUM(5000)
 {
     //centrales Widget initialisieren
     widgetCentral = new QWidget(this);
 
     //Plot initialisieren
-    plot = new InterpolationPlot(widgetCentral);
+    plot = new graphics::InterpolationPlot(widgetCentral);
     plot->setMinimumSize(560,480);
 
     //Interpolationsarten hinzufügen
-    plot->addIType("Lineare Interpolation",new Linear(),Qt::red);
-    plot->addIType("Polynom-Interpolation",new Polynom(),Qt::darkGreen);
-    plot->addIType("kubische Spline-Interpolation",new Spline(),Qt::darkBlue);
+    plot->addIType("Lineare Interpolation",new numeric::Linear(),Qt::red);
+    plot->addIType("Polynom-Interpolation",new numeric::Polynom(),Qt::darkGreen);
+    plot->addIType("kubische Spline-Interpolation",new numeric::Spline(),Qt::darkBlue);
 
     //Titel und Hintergrund einstellen
     setWindowTitle("SEP Interpolation Gruppe 11");
@@ -221,12 +221,12 @@ MainWindow::MainWindow(QWidget *parent)
     buttonDeactivateAllITypes->setDisabled(true);
 }
 
-MainWindow::~MainWindow()
+graphics::MainWindow::~MainWindow()
 {
     delete widgetCentral;
 }
 
-void MainWindow::updateAxesSlot(){
+void graphics::MainWindow::updateAxesSlot(){
     double xMin = spinBoxXMin->value();
     double xMax = spinBoxXMax->value();
     double yMin = spinBoxYMin->value();
@@ -266,7 +266,7 @@ void MainWindow::updateAxesSlot(){
     plot->setRange(xMin,xMax,yMin,yMax);
 }
 
-void MainWindow::newPointPerKeyboardSlot(){
+void graphics::MainWindow::newPointPerKeyboardSlot(){
     double x = spinBoxXKoord->value();
     double y = spinBoxYKoord->value();
     double xMin,xMax,yMin,yMax;
@@ -316,7 +316,7 @@ void MainWindow::newPointPerKeyboardSlot(){
     emit plot->plotOnClickEvent(x,y,Qt::LeftButton);
 }
 
-void MainWindow::resetSlot(){
+void graphics::MainWindow::resetSlot(){
     while(listWidgetActiveITypes->count()>0){
         QListWidgetItem * tmpItem = listWidgetActiveITypes->takeItem(0);
         listWidgetInactiveITypes->addItem(tmpItem);
@@ -337,7 +337,7 @@ void MainWindow::resetSlot(){
     plot->reset();
 }
 
-void MainWindow::helpSlot(){
+void graphics::MainWindow::helpSlot(){
     messageBox->setWindowTitle("Hilfe");
     messageBox->setText("Diese Programm bietet folgende Funktionalitäten:\n\n"
                     "1. Einen Punkt hinzufügen:\nUm einen Punkt hinzu"
@@ -370,7 +370,7 @@ void MainWindow::helpSlot(){
     delete tmpButton1;
 }
 
-void MainWindow::shutDownSlot(){
+void graphics::MainWindow::shutDownSlot(){
     messageBox->setWindowTitle("Programm beenden");
     messageBox->setText("Sind Sie sicher, dass Sie das Programm beenden möchten?");
     messageBox->setDetailedText("");
@@ -386,7 +386,7 @@ void MainWindow::shutDownSlot(){
     delete tmpButton2;
 }
 
-void MainWindow::activateITypesSlot(){
+void graphics::MainWindow::activateITypesSlot(){
     QList<QListWidgetItem*> changedIArten = listWidgetInactiveITypes->selectedItems();
     if(changedIArten.size()==0) return;
     while(changedIArten.size()>1){
@@ -409,7 +409,7 @@ void MainWindow::activateITypesSlot(){
     }
 }
 
-void MainWindow::deactivateITypesSlot(){
+void graphics::MainWindow::deactivateITypesSlot(){
     QList<QListWidgetItem*> changedIArten = listWidgetActiveITypes->selectedItems();
     if(changedIArten.size()==0) return;
     while(changedIArten.size()>1){
@@ -432,7 +432,7 @@ void MainWindow::deactivateITypesSlot(){
     }
 }
 
-void MainWindow::activateAllITypesSlot(){
+void graphics::MainWindow::activateAllITypesSlot(){
     while(listWidgetInactiveITypes->count()>1){
         QListWidgetItem * tmpItem = listWidgetInactiveITypes->takeItem(0);
         listWidgetActiveITypes->addItem(tmpItem);
@@ -448,7 +448,7 @@ void MainWindow::activateAllITypesSlot(){
     buttonDeactivateAllITypes->setDisabled(false);
 }
 
-void MainWindow::deactivateAllITypesSlot(){
+void graphics::MainWindow::deactivateAllITypesSlot(){
     while(listWidgetActiveITypes->count()>0){
         QListWidgetItem * tmpItem = listWidgetActiveITypes->takeItem(0);
         listWidgetInactiveITypes->addItem(tmpItem);

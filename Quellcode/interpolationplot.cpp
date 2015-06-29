@@ -1,27 +1,27 @@
 #include "../Header-Dateien/interpolationplot.h"
 
-InterpolationPlot::InterpolationPlot(QWidget * parent): QStcePlot(parent,true),
+graphics::InterpolationPlot::InterpolationPlot(QWidget * parent): graphics::QStcePlot(parent,true),
     activeITypesCount(0), errormessageBox(new QMessageBox(this)), epsilon(10){
     //Standard Definitions- und Wertebereich
     setRange(0,100,0,50);
     connect(this,SIGNAL(plotOnClickEvent(double,double,Qt::MouseButton)),this,SLOT(changePointsSlot(double,double,Qt::MouseButton)));
 }
 
-InterpolationPlot::~InterpolationPlot(){
+graphics::InterpolationPlot::~InterpolationPlot(){
     delete errormessageBox;
     QList<IType*> toBeDeletedITypes = ITypes.values();
     QList<IType*>::iterator it = toBeDeletedITypes.begin();
     for(;it!=toBeDeletedITypes.end();++it) delete (*it);
 }
 
-void InterpolationPlot::replot(){
+void graphics::InterpolationPlot::replot(){
     QVector<double> xIn,yIn;
     Points.getPointsAsSeperateVectors(xIn,yIn);
     setKeyPoints(xIn,yIn);
     int i=1;
     if(Points.size() > 2){
         int n =1000;
-        PointsVector PointsOut;
+        custom_types::PointsVector PointsOut;
         QVector<double> xOut, yOut;
         double xMin,xMax,yMin,yMax;
         getRange(xMin,xMax,yMin,yMax);
@@ -40,17 +40,17 @@ void InterpolationPlot::replot(){
     xIn.clear();
     yIn.clear();
     for(; i <= oldActiveITypesCount; ++i) setPoints(xIn,yIn,i);
-    QStcePlot::replot();
+    graphics::QStcePlot::replot();
 }
 
-void InterpolationPlot::reset(){
+void graphics::InterpolationPlot::reset(){
     activeITypes.clear();
     Points.clear();
     setRange(0,100,0,50);
     replot();
 }
 
-void InterpolationPlot::addIType(QString name, InterpolationType *algorithm,
+void graphics::InterpolationPlot::addIType(QString name, numeric::InterpolationType *algorithm,
                                                 Qt::GlobalColor color){
     IType * tmpIType = new IType;
     tmpIType->algorithm = algorithm;
@@ -58,34 +58,34 @@ void InterpolationPlot::addIType(QString name, InterpolationType *algorithm,
     ITypes.insert(name,tmpIType);
 }
 
-QList<QString> InterpolationPlot::getITypesNames(){
+QList<QString> graphics::InterpolationPlot::getITypesNames(){
     return ITypes.keys();
 }
 
-void InterpolationPlot::activateIType(QString type){
+void graphics::InterpolationPlot::activateIType(QString type){
     activeITypes.append(type);
     replot();
 }
 
-void InterpolationPlot::activateITypeWithoutPlotting(QString type){
+void graphics::InterpolationPlot::activateITypeWithoutPlotting(QString type){
     activeITypes.append(type);
 }
 
-void InterpolationPlot::deactivateIType(QString type){
+void graphics::InterpolationPlot::deactivateIType(QString type){
     activeITypes.removeOne(type);
     replot();
 }
 
-void InterpolationPlot::deactivateITypeWithoutPlotting(QString type){
+void graphics::InterpolationPlot::deactivateITypeWithoutPlotting(QString type){
     activeITypes.removeOne(type);
 }
 
-void InterpolationPlot::deactivateAllITypes(){
+void graphics::InterpolationPlot::deactivateAllITypes(){
     activeITypes.clear();
     replot();
 }
 
-int InterpolationPlot::findBestMatch(double x, double y){
+int graphics::InterpolationPlot::findBestMatch(double x, double y){
     double xMin,xMax,yMin,yMax;
     getRange(xMin,xMax,yMin,yMax);
     QSize plotSize = getPlotSize();
@@ -105,7 +105,7 @@ int InterpolationPlot::findBestMatch(double x, double y){
     return posBestMatch;
 }
 
-void InterpolationPlot::changePointsSlot(double x, double y, Qt::MouseButton btn){
+void graphics::InterpolationPlot::changePointsSlot(double x, double y, Qt::MouseButton btn){
     if(btn==Qt::LeftButton){
         int pos = Points.findEqualX(x);
         if(pos != -1){
@@ -133,7 +133,7 @@ void InterpolationPlot::changePointsSlot(double x, double y, Qt::MouseButton btn
             delete tmpButton1;
             delete tmpButton2;
         }
-        else Points.append(Point(x,y));
+        else Points.append(custom_types::Point(x,y));
         Points.sort();
     }else{
         int posBestMatch = findBestMatch(x,y);
@@ -149,11 +149,21 @@ void InterpolationPlot::changePointsSlot(double x, double y, Qt::MouseButton btn
                          "Koordinaten zu löschen (" + QString().setNum(x)
                          + ", " + QString().setNum(y) + ").";
             errormessageBox->setDetailedText("");
-            errormessageBox->setDetailedText(str);
             errormessageBox->setIcon(QMessageBox::Warning);
-            QPushButton * tmpButton1 = errormessageBox->addButton(QMessageBox::Discard);
+            QPushButton * tmpButton1 = new QPushButton("Abbrechen");
+            errormessageBox->addButton(tmpButton1,QMessageBox::DestructiveRole);
             QPushButton * tmpButton2 = errormessageBox->addButton(QMessageBox::Retry);
             errormessageBox->setDefaultButton(tmpButton1);
+            QString str2 = str + "\nAktueller Radius: " + QString().setNum(epsilon) + " Pixel.";
+            errormessageBox->setDetailedText(str2);
+            errormessageBox->exec();
+            if(errormessageBox->clickedButton()==tmpButton1){
+                errormessageBox->removeButton(tmpButton1);
+                errormessageBox->removeButton(tmpButton2);
+                delete tmpButton1;
+                delete tmpButton2;
+                return;
+            }
             do{
                 epsilon *= 1.5;
                 int posBestMatch = findBestMatch(x,y);
@@ -162,6 +172,8 @@ void InterpolationPlot::changePointsSlot(double x, double y, Qt::MouseButton btn
                     epsilon = 10;
                     break;
                 }
+                str2 = str + "\nAktueller Radius: " + QString().setNum(epsilon) + " Pixel.";
+                errormessageBox->setDetailedText(str2);
                 errormessageBox->exec();
                 if(errormessageBox->clickedButton()==tmpButton1){
                     errormessageBox->removeButton(tmpButton1);
@@ -180,7 +192,7 @@ void InterpolationPlot::changePointsSlot(double x, double y, Qt::MouseButton btn
     replot();
 }
 
-void InterpolationPlot::deleteAllPointsSlot(){
+void graphics::InterpolationPlot::deleteAllPointsSlot(){
     Points.clear();
     replot();
 }

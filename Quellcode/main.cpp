@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
     QTranslator translator;
     translator.load("qt_de_DE", QLibraryInfo::location(QLibraryInfo::TranslationsPath));
     app.installTranslator(&translator);
-    MainWindow w;
+    graphics::MainWindow w;
     w.show();
 
     return app.exec();

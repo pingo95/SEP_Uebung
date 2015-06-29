@@ -16,6 +16,7 @@
 
 #include "interpolationplot.h"
 
+namespace graphics{
 class MainWindow : public QMainWindow
 {
     Q_OBJECT    
@@ -36,7 +37,7 @@ private:
     QHBoxLayout * subHBoxLayout;
 
     //Plot:
-    InterpolationPlot * plot;
+    graphics::InterpolationPlot * plot;
 
     //Buttons:
     QPushButton * buttonAddPoint;
@@ -94,5 +95,7 @@ protected slots:
     void deactivateAllITypesSlot();
 
 };
+
+}
 
 #endif // MAINWINDOW_H

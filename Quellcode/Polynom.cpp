@@ -1,7 +1,7 @@
 #include "../Header-Dateien/polynom.h"
 #include "../Header-Dateien/pointsvector.h"
 
-void Polynom::calculateInterpolation(PointsVector &in,  PointsVector &out,
+void numeric::Polynom::calculateInterpolation(custom_types::PointsVector &in,  custom_types::PointsVector &out,
                                     double xMin, double xMax, int n) {
     int nIn = in.size();
     double coef[nIn-1][nIn-1];
@@ -31,7 +31,7 @@ void Polynom::calculateInterpolation(PointsVector &in,  PointsVector &out,
 
         }
         tmpY = tmpY * (tmpX - in[0].getX()) + in[0].getY();
-        Point tmpPoint(tmpX,tmpY);
+        custom_types::Point tmpPoint(tmpX,tmpY);
         out[i] = tmpPoint;
     }
 
