@@ -1,9 +1,7 @@
 #include "../Header-Dateien/interpolationplot.h"
 
-int InterpolationPlot::idCounter = 0;
-
 InterpolationPlot::InterpolationPlot(QWidget * parent): QStcePlot(parent,true),
-    errormessageBox(new QMessageBox(this)), epsilon(10){
+    activeITypesCount(0), errormessageBox(new QMessageBox(this)), epsilon(10){
     //Standard Definitions- und Wertebereich
     setRange(0,100,0,50);
     connect(this,SIGNAL(plotOnClickEvent(double,double,Qt::MouseButton)),this,SLOT(changePointsSlot(double,double,Qt::MouseButton)));
@@ -18,31 +16,30 @@ InterpolationPlot::~InterpolationPlot(){
 
 void InterpolationPlot::replot(){
     QVector<double> xIn,yIn;
-    for(int i=1; i <= ITypes.count(); ++i) setPoints(xIn,yIn,i);
     Points.getPointsAsSeperateVectors(xIn,yIn);
     setKeyPoints(xIn,yIn);
+    int i=1;
     if(Points.size() > 2){
         int n =1000;
         PointsVector PointsOut;
         QVector<double> xOut, yOut;
         double xMin,xMax,yMin,yMax;
         getRange(xMin,xMax,yMin,yMax);
-        QMap<int,IType*> tmpITypes;
         QList<QString>::iterator it = activeITypes.begin();
         for(;it != activeITypes.end(); ++it){
-            IType * tmpIType = ITypes[*it];
-            tmpITypes.insert(tmpIType->id,tmpIType);
-        }
-        QList<int> tmpIdList = tmpITypes.keys();
-        QList<int>::iterator it2 = tmpIdList.begin();
-        for(;it2 != tmpIdList.end(); ++it2){
             PointsOut.clear();
-            IType * tmpIType = tmpITypes[*it2];
+            IType * tmpIType = ITypes[*it];
             tmpIType->algorithm->calculateInterpolation(Points,PointsOut,xMin,xMax,n);
             PointsOut.getPointsAsSeperateVectors(xOut,yOut);
-            setPoints(xOut,yOut,tmpIType->id,tmpIType->color);
+            setPoints(xOut,yOut,i,tmpIType->color);
+            ++i;
         }
     }
+    int oldActiveITypesCount = activeITypesCount;
+    activeITypesCount = i-1;
+    xIn.clear();
+    yIn.clear();
+    for(; i <= oldActiveITypesCount; ++i) setPoints(xIn,yIn,i);
     QStcePlot::replot();
 }
 
@@ -56,12 +53,9 @@ void InterpolationPlot::reset(){
 void InterpolationPlot::addIType(QString name, InterpolationType *algorithm,
                                                 Qt::GlobalColor color){
     IType * tmpIType = new IType;
-    tmpIType->id = ++InterpolationPlot::idCounter;
     tmpIType->algorithm = algorithm;
     tmpIType->color = color;
     ITypes.insert(name,tmpIType);
-    QVector<double> x;
-    setPoints(x,x,tmpIType->id,tmpIType->color);
 }
 
 QList<QString> InterpolationPlot::getITypesNames(){

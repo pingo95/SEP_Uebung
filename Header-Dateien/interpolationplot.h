@@ -12,7 +12,6 @@ class InterpolationPlot : public QStcePlot {
     Q_OBJECT
 
 struct IType{
-    int id;
     InterpolationType * algorithm;
     Qt::GlobalColor color;
 };
@@ -33,11 +32,10 @@ public:
     void deactivateAllITypes();
 
 private:
-    static int idCounter;
-
     PointsVector Points;
     QMap<QString,IType*> ITypes;
     QList<QString> activeITypes;
+    int activeITypesCount;
     QMessageBox * errormessageBox;
     int epsilon;
 

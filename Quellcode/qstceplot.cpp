@@ -40,7 +40,7 @@ void QStcePlot::setPoints(QVector<double> &x, QVector<double> &y, int graphI, QC
     while(plot->graphCount() < graphI + 1){
         plot->addGraph();
     }
-    plot->graph(plot->graphCount()-1)->setPen(QPen(color));
+    plot->graph(graphI)->setPen(QPen(color));
     plot->graph(graphI)->setData(x,y);
     plot->replot();
 }
