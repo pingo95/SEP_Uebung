@@ -8,6 +8,10 @@
 #include <QMap>
 
 /*!
+    \brief graphics contains all the classes dealing with the user interface.
+*/
+namespace graphics{
+/*!
     \brief InterpolationPlot specializes QStcePlot in order to provide functions for interpolation.
 
     It provides methods for:
@@ -18,7 +22,6 @@
     - adding and deleting single points per mouse click event
     - deleting all points
 */
-namespace graphics{
 class InterpolationPlot : public QStcePlot {
     Q_OBJECT
 

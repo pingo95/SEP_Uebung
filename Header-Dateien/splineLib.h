@@ -32,16 +32,25 @@
 #include <vector>
 #include <algorithm>
 
-
 // unnamed namespace only because the implementation is in this
 // header file and we don't want to export symbols to the obj files
-namespace
+namespace numeric
 {
 
+/*!
+    \brief Cubic spline library used in spline.h
+    \author Tino Kluge
+    \copyright 2011, 2014 Tino Kluge (ttk448 at gmail.com) under the GNU General Public License
+*/
 namespace tk
 {
 
 // band matrix solver
+/*!
+    \brief Cubic spline library used in spline.h
+    \author Tino Kluge
+    \copyright 2011, 2014 Tino Kluge (ttk448 at gmail.com) under the GNU General Public License
+*/
 class band_matrix
 {
 private:
@@ -77,6 +86,11 @@ public:
 
 
 // spline interpolation
+/*!
+    \brief Cubic spline library used in spline.h
+    \author Tino Kluge
+    \copyright 2011, 2014 Tino Kluge (ttk448 at gmail.com) under the GNU General Public License
+*/
 class spline
 {
 public:

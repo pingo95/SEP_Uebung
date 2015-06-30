@@ -6,6 +6,7 @@
 #include <QVBoxLayout>
 
 class QCustomPlot;
+namespace graphics{
 /*!
   \brief QStcePlot provides a wrapper for basic functions of <a href="http://www.qcustomplot.com/">QCustomPlot</a> designed for easier usage.
 
@@ -16,7 +17,6 @@ class QCustomPlot;
   - refreshing the current plot
   - passing of mouse click events
 */
-namespace graphics{
 class QStcePlot : public QWidget{
     Q_OBJECT
 public:
