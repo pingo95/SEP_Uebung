@@ -9,17 +9,17 @@ graphics::InterpolationPlot::InterpolationPlot(QWidget * parent): graphics::QStc
 
 graphics::InterpolationPlot::~InterpolationPlot(){
     delete errormessageBox;
-    QList<IType*> toBeDeletedITypes = ITypes.values();
+    QList<IType*> toBeDeletedITypes = iTypes.values();
     QList<IType*>::iterator it = toBeDeletedITypes.begin();
     for(;it!=toBeDeletedITypes.end();++it) delete (*it);
 }
 
 void graphics::InterpolationPlot::replot(){
     QVector<double> xIn,yIn;
-    Points.getPointsAsSeperateVectors(xIn,yIn);
+    points.getPointsAsSeperateVectors(xIn,yIn);
     setKeyPoints(xIn,yIn);
     int i=1;
-    if(Points.size() > 2){
+    if(points.size() > 2){
         int n =1000;
         custom_types::PointsVector PointsOut;
         QVector<double> xOut, yOut;
@@ -28,8 +28,8 @@ void graphics::InterpolationPlot::replot(){
         QList<QString>::iterator it = activeITypes.begin();
         for(;it != activeITypes.end(); ++it){
             PointsOut.clear();
-            IType * tmpIType = ITypes[*it];
-            tmpIType->algorithm->calculateInterpolation(Points,PointsOut,xMin,xMax,n);
+            IType * tmpIType = iTypes[*it];
+            tmpIType->algorithm->calculateInterpolation(points,PointsOut,xMin,xMax,n);
             PointsOut.getPointsAsSeperateVectors(xOut,yOut);
             setPoints(xOut,yOut,i,tmpIType->color);
             ++i;
@@ -45,7 +45,7 @@ void graphics::InterpolationPlot::replot(){
 
 void graphics::InterpolationPlot::reset(){
     activeITypes.clear();
-    Points.clear();
+    points.clear();
     setRange(0,100,0,50);
     replot();
 }
@@ -55,11 +55,11 @@ void graphics::InterpolationPlot::addIType(QString name, numeric::InterpolationT
     IType * tmpIType = new IType;
     tmpIType->algorithm = algorithm;
     tmpIType->color = color;
-    ITypes.insert(name,tmpIType);
+    iTypes.insert(name,tmpIType);
 }
 
 QList<QString> graphics::InterpolationPlot::getITypesNames(){
-    return ITypes.keys();
+    return iTypes.keys();
 }
 
 void graphics::InterpolationPlot::activateIType(QString type){
@@ -93,9 +93,9 @@ int graphics::InterpolationPlot::findBestMatch(double x, double y){
     double epsilonY = epsilon * (yMax-yMin)/plotSize.height();
     double bestMatch=100000;
     int posBestMatch=-1;
-    for(int i=0; i < Points.size();++i){
-        double diffX=abs(x-Points[i].getX());
-        double diffY=abs(y-Points[i].getY());
+    for(int i=0; i < points.size();++i){
+        double diffX=abs(x-points[i].getX());
+        double diffY=abs(y-points[i].getY());
         double tmp=sqrt(diffX*diffX+diffY*diffY);
         if(diffX <= epsilonX && diffY <= epsilonY && tmp < bestMatch){
             bestMatch = tmp;
@@ -107,7 +107,7 @@ int graphics::InterpolationPlot::findBestMatch(double x, double y){
 
 void graphics::InterpolationPlot::changePointsSlot(double x, double y, Qt::MouseButton btn){
     if(btn==Qt::LeftButton){
-        int pos = Points.findEqualX(x);
+        int pos = points.findEqualX(x);
         if(pos != -1){
             errormessageBox->setWindowTitle("Punkt existiert schon");
             errormessageBox->setText("An der x-Position, an der Sie einen Punkt hinzufügen wollen,"
@@ -118,7 +118,7 @@ void graphics::InterpolationPlot::changePointsSlot(double x, double y, Qt::Mouse
                          "zwei Punkte mit dem gleichen x-Wert existieren. Sie haben versucht einen"
                          " Punkt an den folgenden Koordinaten hinzuzufügen (" + QString().setNum(x)
                          + ", " + QString().setNum(y) + "). Dort existiert aber bereits der Punkt ("
-                         + QString().setNum(x) + ", " + QString().setNum(Points[pos].getY()) + ").";
+                         + QString().setNum(x) + ", " + QString().setNum(points[pos].getY()) + ").";
             errormessageBox->setDetailedText("");
             errormessageBox->setDetailedText(str);
             errormessageBox->setIcon(QMessageBox::Warning);
@@ -127,18 +127,20 @@ void graphics::InterpolationPlot::changePointsSlot(double x, double y, Qt::Mouse
             errormessageBox->addButton(tmpButton2,QMessageBox::ApplyRole);
             errormessageBox->setDefaultButton(tmpButton1);
             errormessageBox->exec();
-            if(errormessageBox->clickedButton()==tmpButton2) Points[pos].setY(y);
+            if(errormessageBox->clickedButton()==tmpButton2) points[pos].setY(y);
             errormessageBox->removeButton(tmpButton1);
             errormessageBox->removeButton(tmpButton2);
             delete tmpButton1;
             delete tmpButton2;
         }
-        else Points.append(custom_types::Point(x,y));
-        Points.sort();
+        else{
+            points.append(custom_types::Point(x,y));
+            points.sort();
+        }
     }else{
         int posBestMatch = findBestMatch(x,y);
         if (posBestMatch != -1){
-            Points.remove(posBestMatch);
+            points.remove(posBestMatch);
         }else{
             errormessageBox->setWindowTitle("Punkt nicht gefunden");
             errormessageBox->setText("Es konnte kein Punkt in der Nähe ihres Mausklickes "
@@ -168,7 +170,7 @@ void graphics::InterpolationPlot::changePointsSlot(double x, double y, Qt::Mouse
                 epsilon *= 1.5;
                 int posBestMatch = findBestMatch(x,y);
                 if (posBestMatch != -1){
-                    Points.remove(posBestMatch);
+                    points.remove(posBestMatch);
                     epsilon = 10;
                     break;
                 }
@@ -193,6 +195,6 @@ void graphics::InterpolationPlot::changePointsSlot(double x, double y, Qt::Mouse
 }
 
 void graphics::InterpolationPlot::deleteAllPointsSlot(){
-    Points.clear();
+    points.clear();
     replot();
 }

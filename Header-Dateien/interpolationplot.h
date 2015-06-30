@@ -31,8 +31,8 @@ public:
     void deactivateAllITypes();
 
 private:
-    custom_types::PointsVector Points;
-    QMap<QString,IType*> ITypes;
+    custom_types::PointsVector points;
+    QMap<QString,IType*> iTypes;
     QList<QString> activeITypes;
     int activeITypesCount;
     QMessageBox * errormessageBox;

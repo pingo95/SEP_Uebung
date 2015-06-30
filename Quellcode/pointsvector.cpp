@@ -23,6 +23,7 @@ void custom_types::PointsVector::sort(){
 int custom_types::PointsVector::findEqualX(double x){
     for(int i=0; i < size(); ++i){
         if((*this)[i].getX() == x) return i;
+        if((*this)[i].getX() > x ) return -1;
     }
     return -1;
 }
