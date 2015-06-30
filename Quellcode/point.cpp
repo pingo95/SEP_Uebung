@@ -26,6 +26,7 @@ custom_types::Point& custom_types::Point::operator =(const custom_types::Point &
 }
 
 bool custom_types::Point::operator <(const custom_types::Point & rhs){
+    assert(isSet()&&rhs.isSet());
     if(x < rhs.x) return true;
     else if (x == rhs.x && y < rhs.y) return true;
     return false;
