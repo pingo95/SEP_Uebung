@@ -145,7 +145,7 @@ void graphics::InterpolationPlot::changePointsSlot(double x, double y, Qt::Mouse
             errormessageBox->setWindowTitle("Punkt nicht gefunden");
             errormessageBox->setText("Es konnte kein Punkt in der Nähe ihres Mausklickes "
                             "gefunden werden.\n Soll in einer größeren Umgebung nach "
-                            "einem Punkt gesucht werden oder soll der der Löschvorgang"
+                            "einem Punkt gesucht werden oder soll der Löschvorgang"
                             " abgebrochen werden?");
             QString str= "Sie haben versucht einen Punkt an den folgenden "
                          "Koordinaten zu löschen (" + QString().setNum(x)

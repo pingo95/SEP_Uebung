@@ -8,7 +8,7 @@ QT       += core gui printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = SEP_Uebung
+TARGET = ../InterpolationGruppe11
 TEMPLATE = app
 
 
