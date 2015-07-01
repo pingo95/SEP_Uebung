@@ -78,6 +78,9 @@ public:
     */    
     void replot();
 protected:
+    /*!
+        \brief Returns the current size of the plot widget in pixels.
+    */
     QSize getPlotSize() const;
 
 private:

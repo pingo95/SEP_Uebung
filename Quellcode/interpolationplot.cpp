@@ -14,33 +14,9 @@ graphics::InterpolationPlot::~InterpolationPlot(){
     for(;it!=toBeDeletedITypes.end();++it) delete (*it);
 }
 
-void graphics::InterpolationPlot::replot(){
-    QVector<double> xIn,yIn;
-    points.getPointsAsSeperateVectors(xIn,yIn);
-    setKeyPoints(xIn,yIn);
-    int i=1;
-    if(points.size() > 2){
-        int n =1000;
-        custom_types::PointsVector PointsOut;
-        QVector<double> xOut, yOut;
-        double xMin,xMax,yMin,yMax;
-        getRange(xMin,xMax,yMin,yMax);
-        QList<QString>::iterator it = activeITypes.begin();
-        for(;it != activeITypes.end(); ++it){
-            PointsOut.clear();
-            IType * tmpIType = iTypes[*it];
-            tmpIType->algorithm->calculateInterpolation(points,PointsOut,xMin,xMax,n);
-            PointsOut.getPointsAsSeperateVectors(xOut,yOut);
-            setPoints(xOut,yOut,i,tmpIType->color);
-            ++i;
-        }
-    }
-    int oldActiveITypesCount = activeITypesCount;
-    activeITypesCount = i-1;
-    xIn.clear();
-    yIn.clear();
-    for(; i <= oldActiveITypesCount; ++i) setPoints(xIn,yIn,i);
-    graphics::QStcePlot::replot();
+void graphics::InterpolationPlot::setRange(double xmin, double xmax, double ymin, double ymax){
+    QStcePlot::setRange(xmin,xmax,ymin,ymax);
+    replot();
 }
 
 void graphics::InterpolationPlot::reset(){
@@ -83,6 +59,35 @@ void graphics::InterpolationPlot::deactivateITypeWithoutPlotting(QString type){
 void graphics::InterpolationPlot::deactivateAllITypes(){
     activeITypes.clear();
     replot();
+}
+
+void graphics::InterpolationPlot::replot(){
+    QVector<double> xIn,yIn;
+    points.getPointsAsSeperateVectors(xIn,yIn);
+    setKeyPoints(xIn,yIn);
+    int i=1;
+    if(points.size() > 2){
+        int n =1000;
+        custom_types::PointsVector PointsOut;
+        QVector<double> xOut, yOut;
+        double xMin,xMax,yMin,yMax;
+        getRange(xMin,xMax,yMin,yMax);
+        QList<QString>::iterator it = activeITypes.begin();
+        for(;it != activeITypes.end(); ++it){
+            PointsOut.clear();
+            IType * tmpIType = iTypes[*it];
+            tmpIType->algorithm->calculateInterpolation(points,PointsOut,xMin,xMax,n);
+            PointsOut.getPointsAsSeperateVectors(xOut,yOut);
+            setPoints(xOut,yOut,i,tmpIType->color);
+            ++i;
+        }
+    }
+    int oldActiveITypesCount = activeITypesCount;
+    activeITypesCount = i-1;
+    xIn.clear();
+    yIn.clear();
+    for(; i <= oldActiveITypesCount; ++i) setPoints(xIn,yIn,i);
+    graphics::QStcePlot::replot();
 }
 
 int graphics::InterpolationPlot::findBestMatch(double x, double y){

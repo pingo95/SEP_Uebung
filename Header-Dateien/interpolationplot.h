@@ -39,12 +39,24 @@ class InterpolationPlot : public QStcePlot {
 
 public:
 
-    /*! \brief Constructor for the InterpolationPlot.
-     *  \param parent Parent widget for the InterpolationPlot
+    /*!
+        \brief Constructor for the InterpolationPlot.
+        \param parent Parent widget for the InterpolationPlot
 
         Sets default range to [0:100]x[0:50], creates graph(0), set up the mouse signal reciever
     */
     InterpolationPlot(QWidget * parent);
+
+    /*!
+        \brief Assigns the visible range of the plot to the passed arguments.
+        \param xmin minimal value of the x-axis
+        \param ymax maximal value of the x-axis
+        \param ymin minimal value of the y-axis
+        \param ymax maximal value of the y-axis
+
+        Reimplemenation of QStcePlot::setRange(), forces an InterpolationPlot::replot() instead of a QStcePlot::replot().
+    */
+    void setRange(double xmin, double xmax, double ymin, double ymax);
 
     /*!
         \brief Destructor for the InterpolationPlot

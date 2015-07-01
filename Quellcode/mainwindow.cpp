@@ -351,7 +351,7 @@ void graphics::MainWindow::helpSlot(){
                     "Definitions- oder Wertebereich zu ändern, ändern Sie den "
                     "gewünschten Wert in den Feldern 'xMin', 'xMax', 'yMin' oder "
                     "'yMax' und bestätigen Sie mit 'Achsen aktualisieren'.\n\n4. "
-                    "Interpolationsarten zu (de-)aktivieren:\nUm Interpolationsarten "
+                    "Interpolationsarten (de-)aktivieren:\nUm Interpolationsarten "
                     "zu (de-)aktivieren, markieren Sie die gewünschten Arten per Maus"
                     "klick in der entsprechenden Liste und drücken Sie den einfachen "
                     "Pfeil, der in Richtung der anderen Liste zeigt. Um alle Interpol"
