@@ -17,7 +17,7 @@ void graphics::QStcePlot::setRange(double xmin, double xmax, double ymin, double
     plot->xAxis->setRangeUpper(xmax); xMax = xmax;
     plot->yAxis->setRangeLower(ymin); yMin = ymin;
     plot->yAxis->setRangeUpper(ymax); yMax = ymax;
-    plot->replot();
+//    plot->replot();
 }
 
 void graphics::QStcePlot::getRange(double &xmin, double &xmax, double &ymin, double &ymax){

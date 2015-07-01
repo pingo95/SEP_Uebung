@@ -22,7 +22,7 @@ void graphics::InterpolationPlot::setRange(double xmin, double xmax, double ymin
 void graphics::InterpolationPlot::reset(){
     activeITypes.clear();
     points.clear();
-    setRange(0,100,0,50);
+    QStcePlot::setRange(0,100,0,50);
     replot();
 }
 
