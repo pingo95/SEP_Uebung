@@ -50,7 +50,7 @@ public:
     /*!
         \brief Assigns the visible range of the plot to the passed arguments.
         \param xmin minimal value of the x-axis
-        \param ymax maximal value of the x-axis
+        \param xmax maximal value of the x-axis
         \param ymin minimal value of the y-axis
         \param ymax maximal value of the y-axis
 
@@ -71,7 +71,7 @@ public:
     /*!
         \brief Adds a new interpolation-type to the InterpolationPlot.
         \param name Name for the new interpolation-type, will be shown in the UI
-        \param alogrithm Polymorphic pointer to the object which implements the algorithm for the new interpolation-type
+        \param algorithm Polymorphic pointer to the object which implements the algorithm for the new interpolation-type
         \param color Qt::GlobalColor which will be used to draw the graph for the new interpolation-type
 
 

@@ -28,7 +28,7 @@ public:
     /*!
     \brief assigns the visible range of the plot to the passed arguments
     \param xmin minimal value of the x-axis
-    \param ymax maximal value of the x-axis
+    \param xmax maximal value of the x-axis
     \param ymin minimal value of the y-axis
     \param ymax maximal value of the y-axis
     */
@@ -36,7 +36,7 @@ public:
     /*!
     \brief assigns the visible range of the plot to the passed arguments
     \param xmin minimal value of the x-axis
-    \param ymax maximal value of the x-axis
+    \param xmax maximal value of the x-axis
     \param ymin minimal value of the y-axis
     \param ymax maximal value of the y-axis
     */
@@ -71,7 +71,7 @@ public:
     \see QVector
     \see QColor
     */    
-    void setPoints(QVector<double> &x, QVector<double> &y, int graph, QColor color = QColor(Qt::black));
+    void setPoints(QVector<double> &x, QVector<double> &y, int graphI, QColor color = QColor(Qt::black));
 
     /*!
     \brief force the QStcePlot widget to refresh itself
