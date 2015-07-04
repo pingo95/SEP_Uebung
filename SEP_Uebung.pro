@@ -13,31 +13,31 @@ TEMPLATE = app
 
 
 SOURCES +=\
-    Quellcode/point.cpp \
-    Quellcode/pointsvector.cpp \
-    Quellcode/qcustomplot.cpp \
-    Quellcode/qstceplot.cpp \
-    Quellcode/linear.cpp \
-    Quellcode/polynom.cpp \
-    Quellcode/spline.cpp \
-    Quellcode/interpolationplot.cpp \
-    Quellcode/mainwindow.cpp \
-    Quellcode/main.cpp
+    Quellcode/Interpolationplot.cpp \
+    Quellcode/Linear.cpp \
+    Quellcode/Main.cpp \
+    Quellcode/Mainwindow.cpp \
+    Quellcode/Point.cpp \
+    Quellcode/Pointsvector.cpp \
+    Quellcode/Polynom.cpp \
+    Quellcode/Qcustomplot.cpp \
+    Quellcode/Qstceplot.cpp \
+    Quellcode/Spline.cpp
 
 HEADERS  += \
-    Header-Dateien/point.h \
-    Header-Dateien/pointsvector.h \
-    Header-Dateien/qcustomplot.h \
-    Header-Dateien/qstceplot.h \
-    Header-Dateien/interpolationtype.h \
-    Header-Dateien/linear.h \
-    Header-Dateien/polynom.h \
-    Header-Dateien/splineLib.h \
-    Header-Dateien/spline.h \
-    Header-Dateien/interpolationplot.h \
-    Header-Dateien/mainwindow.h
+    Header-Dateien/Interpolationplot.h \
+    Header-Dateien/Interpolationtype.h \
+    Header-Dateien/Linear.h \
+    Header-Dateien/Mainwindow.h \
+    Header-Dateien/Point.h \
+    Header-Dateien/Pointsvector.h \
+    Header-Dateien/Polynom.h \
+    Header-Dateien/Qcustomplot.h \
+    Header-Dateien/Qstceplot.h \
+    Header-Dateien/Spline.h \
+    Header-Dateien/SplineLib.h
 
 win32:RC_FILE = Resources/icon.qrc
 
 RESOURCES += \
-    Resources/projectresources.qrc
+    Resources/Projectresources.qrc

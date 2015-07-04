@@ -1,7 +1,7 @@
-#include "../Header-Dateien/mainwindow.h"
-#include "../Header-Dateien/linear.h"
-#include "../Header-Dateien/polynom.h"
-#include "../Header-Dateien/spline.h"
+#include "../Header-Dateien/Mainwindow.h"
+#include "../Header-Dateien/Linear.h"
+#include "../Header-Dateien/Polynom.h"
+#include "../Header-Dateien/Spline.h"
 
 graphics::MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent), MINIMUM(-5000), MAXIMUM(5000)
@@ -18,12 +18,8 @@ graphics::MainWindow::MainWindow(QWidget *parent)
     plot->addIType("Polynom-Interpolation",new numeric::Polynom(),Qt::darkGreen);
     plot->addIType("kubische Spline-Interpolation",new numeric::Spline(),Qt::darkBlue);
 
-    //Titel und Hintergrund einstellen
+    //Titel einstellen
     setWindowTitle("SEP Interpolation Gruppe 11");
-//    QPalette Pal(palette());
-//    Pal.setColor(QPalette::Background,Qt::white);
-//    widgetCentral->setPalette(Pal);
-//    widgetCentral->setAutoFillBackground(true);
 
     //Buttons initialisieren
     buttonAddPoint = new QPushButton("Punkt hinzufügen",widgetCentral);
@@ -40,20 +36,16 @@ graphics::MainWindow::MainWindow(QWidget *parent)
     //Icons+Groesse
     buttonActivateITypes->setLayoutDirection(Qt::RightToLeft);
     buttonActivateITypes->setIcon(QIcon(":/Icons/right"));
-//    buttonIArtenAktivieren->setText("        Aktivieren");
     buttonActivateITypes->setIconSize(QSize(15,15));
 
     buttonDeactivateIType->setIcon(QIcon(":/Icons/left"));
-//    buttonIArtenDeaktivieren->setText("Deaktivieren");
     buttonDeactivateIType->setIconSize(QSize(15,15));
 
     buttonActivateAllITypes->setLayoutDirection(Qt::RightToLeft);
     buttonActivateAllITypes->setIcon(QIcon(":/Icons/2right"));
-//    buttonAlleIArtenAktivieren->setText("   Alle aktivieren");
     buttonActivateAllITypes->setIconSize(QSize(15,15));
 
     buttonDeactivateAllITypes->setIcon(QIcon(":/Icons/2left"));
-//    buttonAlleIArtenDeaktivieren->setText("Alle deaktivieren");
     buttonDeactivateAllITypes->setIconSize(QSize(15,15));
 
     //SpinBoxen initialisieren

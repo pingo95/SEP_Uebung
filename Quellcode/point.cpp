@@ -1,4 +1,4 @@
-#include "../Header-Dateien/point.h"
+#include "../Header-Dateien/Point.h"
 #include <cassert>
 
 custom_types::Point::Point(): x(0), y(0),

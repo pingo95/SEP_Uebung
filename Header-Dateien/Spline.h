@@ -1,7 +1,7 @@
 #ifndef SPLINE_H
 #define SPLINE_H
 
-#include "interpolationtype.h"
+#include "Interpolationtype.h"
 
 namespace numeric {
 /*!

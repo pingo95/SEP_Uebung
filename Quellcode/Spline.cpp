@@ -1,6 +1,6 @@
-#include "../Header-Dateien/spline.h"
-#include "../Header-Dateien/splineLib.h"
-#include "../Header-Dateien/pointsvector.h"
+#include "../Header-Dateien/Spline.h"
+#include "../Header-Dateien/SplineLib.h"
+#include "../Header-Dateien/Pointsvector.h"
 void numeric::Spline::calculateInterpolation(custom_types::PointsVector &in,  custom_types::PointsVector &out,
                                    double xMin, double xMax, int n) {
     tk::spline s;

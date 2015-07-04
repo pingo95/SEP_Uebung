@@ -1,7 +1,7 @@
 #ifndef LINEAR_H
 #define LINEAR_H
 
-#include "interpolationtype.h"
+#include "Interpolationtype.h"
 
 namespace numeric{
 /*!

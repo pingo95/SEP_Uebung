@@ -2,7 +2,7 @@
 #define INTERPOLATIONTYPE_H
 
 #include <QVector>
-#include "pointsvector.h"
+#include "Pointsvector.h"
 /*!
     \brief numeric contains all the classes implementing the numerical algorithms.
 */

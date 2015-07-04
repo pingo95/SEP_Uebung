@@ -1,5 +1,5 @@
-#include "../Header-Dateien/polynom.h"
-#include "../Header-Dateien/pointsvector.h"
+#include "../Header-Dateien/Polynom.h"
+#include "../Header-Dateien/Pointsvector.h"
 
 void numeric::Polynom::calculateInterpolation(custom_types::PointsVector &in,  custom_types::PointsVector &out,
                                     double xMin, double xMax, int n) {

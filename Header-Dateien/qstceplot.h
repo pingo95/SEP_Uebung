@@ -1,7 +1,7 @@
 #ifndef Q_STCE_PLOT
 #define Q_STCE_PLOT
 
-#include "qcustomplot.h"
+#include "Qcustomplot.h"
 #include <QObject>
 #include <QVBoxLayout>
 

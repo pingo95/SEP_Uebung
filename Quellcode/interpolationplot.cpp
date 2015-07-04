@@ -1,4 +1,4 @@
-#include "../Header-Dateien/interpolationplot.h"
+#include "../Header-Dateien/Interpolationplot.h"
 
 graphics::InterpolationPlot::InterpolationPlot(QWidget * parent): graphics::QStcePlot(parent,true),
     activeITypesCount(0), errormessageBox(new QMessageBox(this)), epsilon(10){

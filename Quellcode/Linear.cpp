@@ -1,5 +1,5 @@
-#include "../Header-Dateien/linear.h"
-#include "../Header-Dateien/pointsvector.h"
+#include "../Header-Dateien/Linear.h"
+#include "../Header-Dateien/Pointsvector.h"
 void numeric::Linear::calculateInterpolation(custom_types::PointsVector &in,  custom_types::PointsVector &out,
                                    double xMin, double xMax, int n){
     out = in;

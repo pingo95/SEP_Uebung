@@ -2,7 +2,7 @@
 #define POINTSVECTOR
 
 #include <QVector>
-#include "point.h"
+#include "Point.h"
 
 namespace custom_types{
 /*!

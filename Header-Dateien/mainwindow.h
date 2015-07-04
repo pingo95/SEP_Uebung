@@ -14,7 +14,7 @@
 #include <QMessageBox>
 
 
-#include "interpolationplot.h"
+#include "Interpolationplot.h"
 
 namespace graphics{
 

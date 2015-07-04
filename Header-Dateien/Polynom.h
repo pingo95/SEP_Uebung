@@ -1,7 +1,7 @@
 #ifndef POLYNOM_H
 #define POLYNOM_H
 
-#include "interpolationtype.h"
+#include "Interpolationtype.h"
 
 namespace numeric{
 /*!

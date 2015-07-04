@@ -23,7 +23,7 @@
 **          Version: 1.3.1                                                **
 ****************************************************************************/
 
-#include "../Header-Dateien/qcustomplot.h"
+#include "../Header-Dateien/Qcustomplot.h"
 
 
 

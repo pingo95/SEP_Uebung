@@ -1,4 +1,4 @@
-#include "../Header-Dateien/pointsvector.h"
+#include "../Header-Dateien/Pointsvector.h"
 
 void custom_types::PointsVector::getPointsAsSeperateVectors(QVector<double> &x, QVector<double> &y){
     x.clear();

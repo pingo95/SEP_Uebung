@@ -1,9 +1,9 @@
 #ifndef INTERPOLATIONPLOT_H
 #define INTERPOLATIONPLOT_H
 
-#include "qstceplot.h"
+#include "Qstceplot.h"
 #include <QList>
-#include "interpolationtype.h"
+#include "Interpolationtype.h"
 #include <QMessageBox>
 #include <QMap>
 
