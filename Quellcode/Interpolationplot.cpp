@@ -14,6 +14,15 @@ graphics::InterpolationPlot::~InterpolationPlot(){
     for(;it!=toBeDeletedITypes.end();++it) delete (*it);
 }
 
+QList<custom_types::Point> graphics::InterpolationPlot::testPointOutOfNewRange(double xmin, double xmax, double ymin, double ymax){
+    QList<custom_types::Point> exteriorPoints;
+    int i=0,j=points.size()-1;
+    for(;i<points.size()&&points[i].getX()<xmin;++i) exteriorPoints.append(points[i]);
+    for(;j>0&&points[j].getX()>xmax;--j) exteriorPoints.append(points[j]);
+    for(;i<=j;++i) if(points[i].getY() < ymin || points[i].getY() > ymax) exteriorPoints.append(points[i]);
+    return exteriorPoints;
+}
+
 void graphics::InterpolationPlot::setRange(double xmin, double xmax, double ymin, double ymax){
     QStcePlot::setRange(xmin,xmax,ymin,ymax);
     replot();

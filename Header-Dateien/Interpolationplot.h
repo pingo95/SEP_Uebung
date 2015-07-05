@@ -48,6 +48,22 @@ public:
     InterpolationPlot(QWidget * parent);
 
     /*!
+        \brief Destructor for the InterpolationPlot
+    */
+    ~InterpolationPlot();
+
+    /*!
+        \brief Tests if any point currently in the InterpolationPlot exceeds any of the new boundaries.
+        \param xmin new minimal value of the x-axis
+        \param xmax new maximal value of the x-axis
+        \param ymin new minimal value of the y-axis
+        \param ymax new maximal value of the y-axis
+
+        Test function meant to be used before changing the domain of definition and/or the range. Returns a list of the points exceeding any of the new axes (for the details of the warning).
+    */
+    QList<custom_types::Point> testPointOutOfNewRange(double xmin, double xmax, double ymin, double ymax);
+
+    /*!
         \brief Assigns the visible range of the plot to the passed arguments.
         \param xmin minimal value of the x-axis
         \param xmax maximal value of the x-axis
@@ -57,11 +73,6 @@ public:
         Reimplemenation of QStcePlot::setRange(), forces an InterpolationPlot::replot() instead of a QStcePlot::replot().
     */
     void setRange(double xmin, double xmax, double ymin, double ymax);
-
-    /*!
-        \brief Destructor for the InterpolationPlot
-    */
-    ~InterpolationPlot();
 
     /*!
         \brief Resets the InterpolationPlot to its default state.
@@ -154,7 +165,7 @@ private:
     */
     int findBestMatch(double x, double y);
 
-protected slots:
+public slots:
 
     /*!
         \brief Adds or removes a point from the InterpolationPlot.

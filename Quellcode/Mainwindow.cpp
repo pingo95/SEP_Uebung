@@ -255,6 +255,70 @@ void graphics::MainWindow::updateAxesSlot(){
         delete tmpButton2;
         return;
     }
+    QList<custom_types::Point> exteriorPoints = plot->testPointOutOfNewRange(xMin,xMax,yMin,yMax);
+    if(exteriorPoints.size()>0){
+        messageBox->setWindowTitle("Punkte nicht sichtbar");
+        messageBox->setText("Mit den Werten, die Sie eingegeben haben, wären bereits"
+                            " existierende Punkte außerhalb des neuen Definitions- und"
+                            " Wertebereichs.\nMöchten Sie daher die Werte trotzdem anwenden,"
+                            " überarbeiten, verwerfen, oder sollen alle Punkte gelöscht werden"
+                            " bevor die Achsen angepasst werden?\n\nBitte beachten Sie, die Achsen"
+                            " trotz der Puntke auf diese Werte zu ändern kann zu numerisch unsinnigem Verhalten führen.");
+        QString str = "Sie wollen [" + QString().setNum(xMin) + ", "
+                + QString().setNum(xMax) + "] als neuen Definitionsbereich und ["
+                + QString().setNum(yMin) + ", " + QString().setNum(yMax) + "] als "
+                "neuen Wertebereich setzen.\n=> Folgende Punkte, die bereits existie"
+                "ren, wären dann nicht mehr sichtbar:\n";
+        QList<custom_types::Point>::iterator it = exteriorPoints.begin();
+        for(;it!=exteriorPoints.end();++it) str += "(" + QString().setNum((*it).getX()) + ", " + QString().setNum((*it).getY()) + ")\n";
+        messageBox->setDetailedText("");
+        messageBox->setDetailedText(str);
+        messageBox->setIcon(QMessageBox::Warning);
+        QPushButton * tmpButton1 = messageBox->addButton(QMessageBox::Discard);
+        QPushButton * tmpButton2 = messageBox->addButton(QMessageBox::Apply);
+        QPushButton * tmpButton3 = new QPushButton("Überarbeiten");
+        QPushButton * tmpButton4 = new QPushButton("Punkte löschen");
+        messageBox->addButton(tmpButton3,QMessageBox::AcceptRole);
+        messageBox->addButton(tmpButton4,QMessageBox::DestructiveRole);
+        messageBox->setDefaultButton(tmpButton1);
+        messageBox->exec();
+        if(messageBox->clickedButton()==tmpButton1){
+            plot->getRange(xMin,xMax,yMin,yMax);
+            spinBoxXMin->setValue(xMin);
+            spinBoxXMax->setValue(xMax);
+            spinBoxYMin->setValue(yMin);
+            spinBoxYMax->setValue(yMax);
+            messageBox->removeButton(tmpButton1);
+            messageBox->removeButton(tmpButton2);
+            messageBox->removeButton(tmpButton3);
+            messageBox->removeButton(tmpButton4);
+            delete tmpButton1;
+            delete tmpButton2;
+            delete tmpButton3;
+            delete tmpButton4;
+            return;
+        }
+        if(messageBox->clickedButton()==tmpButton3){
+            messageBox->removeButton(tmpButton1);
+            messageBox->removeButton(tmpButton2);
+            messageBox->removeButton(tmpButton3);
+            messageBox->removeButton(tmpButton4);
+            delete tmpButton1;
+            delete tmpButton2;
+            delete tmpButton3;
+            delete tmpButton4;
+            return;
+        }
+        if(messageBox->clickedButton()==tmpButton4) plot->deleteAllPointsSlot();
+        messageBox->removeButton(tmpButton1);
+        messageBox->removeButton(tmpButton2);
+        messageBox->removeButton(tmpButton3);
+        messageBox->removeButton(tmpButton4);
+        delete tmpButton1;
+        delete tmpButton2;
+        delete tmpButton3;
+        delete tmpButton4;
+    }
     plot->setRange(xMin,xMax,yMin,yMax);
 }
 
@@ -293,7 +357,7 @@ void graphics::MainWindow::newPointPerKeyboardSlot(){
         if(messageBox->clickedButton()!=tmpButton3){
             spinBoxXKoord->setValue(0);
             spinBoxYKoord->setValue(0);
-            if(messageBox->clickedButton()==tmpButton2) emit plot->plotOnClickEvent(x,y,Qt::LeftButton);
+            if(messageBox->clickedButton()==tmpButton2) plot->changePointsSlot(x,y,Qt::LeftButton);
         }
         messageBox->removeButton(tmpButton1);
         messageBox->removeButton(tmpButton2);
@@ -305,7 +369,7 @@ void graphics::MainWindow::newPointPerKeyboardSlot(){
     }
     spinBoxXKoord->setValue(0);
     spinBoxYKoord->setValue(0);
-    emit plot->plotOnClickEvent(x,y,Qt::LeftButton);
+    plot->changePointsSlot(x,y,Qt::LeftButton);
 }
 
 void graphics::MainWindow::resetSlot(){
