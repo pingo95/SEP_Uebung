@@ -13,10 +13,12 @@ graphics::QStcePlot::QStcePlot(QWidget* q, bool sorted){
 }
 
 void graphics::QStcePlot::setRange(double xmin, double xmax, double ymin, double ymax){
-    plot->xAxis->setRangeLower(xmin); xMin = xmin;
-    plot->xAxis->setRangeUpper(xmax); xMax = xmax;
-    plot->yAxis->setRangeLower(ymin); yMin = ymin;
-    plot->yAxis->setRangeUpper(ymax); yMax = ymax;
+    plot->xAxis->setRange(xmin,xmax);
+    plot->yAxis->setRange(ymin,ymax);
+
+    xMin = xmin; xMax = xmax;
+    yMin = ymin; yMax = ymax;
+
     plot->replot();
 }
 

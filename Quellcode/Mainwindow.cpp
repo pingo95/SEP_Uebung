@@ -261,9 +261,8 @@ void graphics::MainWindow::updateAxesSlot(){
         messageBox->setText("Mit den Werten, die Sie eingegeben haben, wären bereits"
                             " existierende Punkte außerhalb des neuen Definitions- und"
                             " Wertebereichs.\nMöchten Sie daher die Werte trotzdem anwenden,"
-                            " überarbeiten, verwerfen, oder sollen alle Punkte gelöscht werden"
-                            " bevor die Achsen angepasst werden?\n\nBitte beachten Sie, die Achsen"
-                            " trotz der Puntke auf diese Werte zu ändern kann zu numerisch unsinnigem Verhalten führen.");
+                            " überarbeiten, verwerfen, oder sollen alle äußeren Punkte gelöscht werden"
+                            " bevor die Achsen angepasst werden?");
         QString str = "Sie wollen [" + QString().setNum(xMin) + ", "
                 + QString().setNum(xMax) + "] als neuen Definitionsbereich und ["
                 + QString().setNum(yMin) + ", " + QString().setNum(yMax) + "] als "
@@ -309,7 +308,10 @@ void graphics::MainWindow::updateAxesSlot(){
             delete tmpButton4;
             return;
         }
-        if(messageBox->clickedButton()==tmpButton4) plot->deleteAllPointsSlot();
+        if(messageBox->clickedButton()==tmpButton4){
+            QList<custom_types::Point>::iterator it=exteriorPoints.begin();
+            for(;it!=exteriorPoints.end();++it) plot->changePointsSlot((*it).getX(),(*it).getY(),Qt::RightButton);
+        }
         messageBox->removeButton(tmpButton1);
         messageBox->removeButton(tmpButton2);
         messageBox->removeButton(tmpButton3);
