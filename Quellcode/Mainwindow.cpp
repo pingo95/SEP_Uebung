@@ -215,6 +215,7 @@ graphics::MainWindow::MainWindow(QWidget *parent)
 
 graphics::MainWindow::~MainWindow()
 {
+    delete subHBoxLayout;
     delete widgetCentral;
 }
 

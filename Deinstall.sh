@@ -1,7 +1,7 @@
 echo "Deinstalliere InterpolationGruppe11"
-rm InterpolationGruppe11
-cd ./Code
+rm Interpolation*
+cd ./Code 
 make clean
-rm Makefile
-cd ..
+rm Makefile*
+cd .. 
 echo "Fertig."

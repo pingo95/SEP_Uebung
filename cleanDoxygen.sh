@@ -1,7 +1,7 @@
-echo "Loesche die Doxygen-Dokumentation"
+echo "Loesche Doxygen-Dokumentation"
 cd ./Code/Doxygen/
-rm -rf  With*
+rm -rf With*
 cd ..
 cd ..
 rm starteDoxygen*
-echo "Fertig"
+echo "Fertig."

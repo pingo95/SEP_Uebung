@@ -3,4 +3,4 @@ cd ./Code
 qmake-qt5
 make
 cd ..
-echo "Fertig. Zum Starten des Programms InterpolationGruppe11 ausfuehren."
+echo "Fertig zum Starten des Progammes InterpolationGruppe11 ausfuehren."
