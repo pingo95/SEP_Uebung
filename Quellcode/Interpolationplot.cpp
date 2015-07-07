@@ -10,7 +10,8 @@ graphics::InterpolationPlot::InterpolationPlot(QWidget * parent): graphics::QStc
 graphics::InterpolationPlot::~InterpolationPlot(){
     delete errormessageBox;
     QList<IType*> toBeDeletedITypes = iTypes.values();
-    while(toBeDeletedITypes.size()>0) delete toBeDeletedITypes.takeFirst();
+    QList<IType*>::iterator it = toBeDeletedITypes.begin();
+    for(;it!=toBeDeletedITypes.end();++it) delete (*it);
 }
 
 QList<custom_types::Point> graphics::InterpolationPlot::testPointOutOfNewRange(double xmin, double xmax, double ymin, double ymax){
@@ -36,7 +37,9 @@ void graphics::InterpolationPlot::reset(){
 
 void graphics::InterpolationPlot::addIType(QString name, numeric::InterpolationType *algorithm,
                                                 Qt::GlobalColor color){
-    IType * tmpIType = new IType(algorithm,color);
+    IType * tmpIType = new IType;
+    tmpIType->algorithm = algorithm;
+    tmpIType->color = color;
     iTypes.insert(name,tmpIType);
 }
 

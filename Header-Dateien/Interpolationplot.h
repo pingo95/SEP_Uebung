@@ -28,16 +28,13 @@ class InterpolationPlot : public QStcePlot {
     /*!
         \brief IType provides a simple wrapper for the informations about each interpolation-type.
 
-        The class consists of two attributes:
+        The struct consists of twp attributes:
         - algorithm a olymorphic pointer to the object which implements the algorithm for the interpolation-type
         - color a Qt::GlobalColor which will be used to draw the graph for the interpolation-type
     */
-    class IType{
-    public:
+    struct IType{
         numeric::InterpolationType * algorithm;
         Qt::GlobalColor color;
-        IType(numeric::InterpolationType * alg, Qt::GlobalColor col):algorithm(alg),color(col){}
-        ~IType(){delete algorithm;}
     };
 
 public:
